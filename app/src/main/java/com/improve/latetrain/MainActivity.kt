@@ -4,7 +4,8 @@ import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
-import com.chani.latetrain.R
+import com.google.firebase.database.FirebaseDatabase
+import com.improve.latetrain.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,6 +32,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
+        //Get reference to firebase database at "Messages"
+        val instance = FirebaseDatabase.getInstance()
+        //val ref = instance.getReference("Waiting")
+
+
+        //ref.push().setValue()
+
+
 
         textMessage = findViewById(R.id.message)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
