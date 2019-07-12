@@ -9,20 +9,18 @@ import com.improve.latetrain.R
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var textMessage: TextView
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        //check connection to git
         when (item.itemId) {
-            R.id.navigation_home -> {
-                textMessage.setText(R.string.title_home)
+            R.id.navigation_add_mins -> {
+                supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, AddMinsFragment()).commit()
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_dashboard -> {
-                textMessage.setText(R.string.title_dashboard)
+            R.id.navigation_history -> {
+                supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, HistoryFragment()).commit()
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_notifications -> {
-                textMessage.setText(R.string.title_notifications)
+            R.id.navigation_complaints -> {
+                supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, ComplaintsFragment()).commit()
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -40,10 +38,6 @@ class MainActivity : AppCompatActivity() {
 
 
         //ref.push().setValue()
-
-
-
-        textMessage = findViewById(R.id.message)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
     }
 }
