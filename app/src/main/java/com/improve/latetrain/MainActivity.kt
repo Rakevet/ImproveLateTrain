@@ -11,6 +11,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var textMessage: TextView
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        //check connection to git
         when (item.itemId) {
             R.id.navigation_home -> {
                 textMessage.setText(R.string.title_home)
