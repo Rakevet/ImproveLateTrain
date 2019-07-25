@@ -3,4 +3,75 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string-array name="stations">
+        <item>לאן פניך מועדות?</item>
+        <item>אופקים</item>
+        <item>אחיהוד</item>
+        <item>אשדוד עד הלום</item>
+        <item>אשקלון</item>
+        <item>באר יעקב</item>
+        <item>באר שבע - מרכז</item>
+        <item>באר שבע - צפון/אוניברסיטה</item>
+        <item>בית יהושע</item>
+        <item>בית שאן</item>
+        <item>בית שמש</item>
+        <item>בני ברק</item>
+        <item>בנימינה</item>
+        <item>בת ים - יוספטל</item>
+        <item>בת ים - קוממיות</item>
+        <item>דימונה</item>
+        <item>הוד השרון - סוקולוב</item>
+        <item>הרצליה</item>
+        <item>חדרה - מערב</item>
+        <item>חולון - וולפסון</item>
+        <item>חוצות המפרץ</item>
+        <item>חיפה - בת גלים</item>
+        <item>חיפה - חוף הכרמל</item>
+        <item>חיפה - מרכז השמונה</item>
+        <item>יבנה מזרח</item>
+        <item>יבנה מערב</item>
+        <item>יקנעם - כפר יהושע</item>
+        <item>ירושלים - גן החיות התנכי</item>
+        <item>ירושלים - יצחק נבון</item>
+        <item>ירושלים - מלחה</item>
+        <item>כפר חבד</item>
+        <item>כפר סבא נורדאו</item>
+        <item>כרמיאל</item>
+        <item>להבים - רהט</item>
+        <item>לוד</item>
+        <item>לוד גני אביב</item>
+        <item>מגדל העמק - כפר ברוך</item>
+        <item>מודיעין - מרכז</item>
+        <item>מזכרת בתיה</item>
+        <item>מרכזית המפרץ</item>
+        <item>נהריה</item>
+        <item>נמל תעופה בן גוריון</item>
+        <item>נתיבות</item>
+        <item>נתניה</item>
+        <item>נתניה - ספיר</item>
+        <item>עכו</item>
+        <item>עפולה ר.איתן</item>
+        <item>עתלית</item>
+        <item>פאתי מודיעין</item>
+        <item>פתח תקווה - קריית אריה</item>
+        <item>פתח תקווה - סגולה</item>
+        <item>צומת חולון</item>
+        <item>קיסריה - פרדס חנה</item>
+        <item>קריית גת</item>
+        <item>קריית חיים</item>
+        <item>קריית מוצקין</item>
+        <item>קרית מלאכי - יואב</item>
+        <item>ראש העין צפון</item>
+        <item>ראשון לציון - הראשונים</item>
+        <item>ראשון לציון - משה דיין</item>
+        <item>רחובות</item>
+        <item>רמלה</item>
+        <item>רעננה דרום</item>
+        <item>רעננה מערב</item>
+        <item>שדרות</item>
+        <item>תל אביב - אוניברסיטה</item>
+        <item>תל אביב - ההגנה</item>
+        <item>תל אביב - השלום</item>
+        <item>תל אביב - סבידור מרכז</item>
+    </string-array>
 </resources>
