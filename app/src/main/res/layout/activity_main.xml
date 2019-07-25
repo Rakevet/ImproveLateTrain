@@ -16,23 +16,27 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:background="@color/colorAccent">
+            android:background="#221f73">
 
         <TextView android:layout_width="match_parent"
                   android:layout_height="match_parent"
                   android:id="@+id/live_minutes"
+                  android:textColor="@android:color/white"
                   android:gravity="center"
+                  android:textSize="20sp"
                   android:text="5000"/>
 
     </LinearLayout>
 
 
-    <FrameLayout android:layout_width="0dp" android:layout_height="0dp"
-                 android:id="@+id/fragmentContainer"
-                 app:layout_constraintStart_toStartOf="parent"
-                 app:layout_constraintEnd_toEndOf="parent"
-                 app:layout_constraintBottom_toTopOf="@+id/nav_view"
-                 app:layout_constraintTop_toBottomOf="@id/topLayout"></FrameLayout>
+    <FrameLayout
+            android:layout_width="0dp" android:layout_height="0dp"
+            android:id="@+id/fragmentContainer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/nav_view"
+            app:layout_constraintTop_toBottomOf="@id/topLayout"
+    />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_view"
@@ -40,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="0dp"
             android:layout_marginStart="0dp"
+            android:visibility="gone"
             android:background="?android:attr/windowBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
