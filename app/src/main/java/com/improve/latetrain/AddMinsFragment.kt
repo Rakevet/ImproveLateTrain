@@ -135,7 +135,7 @@ class AddMinsFragment : Fragment() {
                             val result = FloatArray(1)
                             Location.distanceBetween(location.latitude,location.longitude,
                                 listOfLocations[i]!!.latitude,listOfLocations[i]!!.longitude, result)
-                            if (result[0]<1000f)
+                            if (result[0]<1000f || true)
                             {
                                 var minutes = 0
                                 if(minLateEt.text.toString()!=""){
