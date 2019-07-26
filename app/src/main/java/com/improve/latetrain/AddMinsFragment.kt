@@ -30,20 +30,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [AddMinsFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [AddMinsFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class AddMinsFragment : Fragment() {
 
     //Locations references
@@ -55,10 +41,13 @@ class AddMinsFragment : Fragment() {
     private val instance = FirebaseDatabase.getInstance()
     private val waitingPath = instance.getReference("Waiting")
     private var TAG = "AddMinsFragment"
-
     //Initializing shared preferences
     private val PREF_NAME = "First_Report"
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -157,10 +146,6 @@ class AddMinsFragment : Fragment() {
                                 var destination = destinationStationSp.selectedItem.toString()
                                 val deviceID = Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
                                 var addInfo = AddInfoObject(minutes, deviceID, i, destination, timestamp)
-
-                                val editor = sharedPreferences.edit()
-                                editor.putString("addInfo",Gson().toJson(addInfo).toString())
-                                editor.apply()
                                 waitingPath.push().setValue(addInfo)
                                 Log.d(TAG, "Waiting minutes have been added: ${addInfo.minutes}")
                                 flag = true
@@ -250,8 +235,6 @@ companion object {
     fun newInstance(param1: String, param2: String) =
         AddMinsFragment().apply {
             arguments = Bundle().apply {
-                putString(ARG_PARAM1, param1)
-                putString(ARG_PARAM2, param2)
             }
         }
 }
