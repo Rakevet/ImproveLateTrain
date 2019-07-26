@@ -1,5 +1,6 @@
 package com.improve.latetrain
 
+import android.app.AlertDialog
 import android.content.*
 import android.content.pm.PackageManager
 import android.location.Location
@@ -22,7 +23,9 @@ import com.google.android.gms.common.util.UidVerifier
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.FirebaseDatabase
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.fragment_add_mins.*
+import org.json.JSONObject
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -42,9 +45,6 @@ private const val ARG_PARAM2 = "param2"
  *
  */
 class AddMinsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     //Locations references
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -55,15 +55,10 @@ class AddMinsFragment : Fragment() {
     private val instance = FirebaseDatabase.getInstance()
     private val waitingPath = instance.getReference("Waiting")
     private var TAG = "AddMinsFragment"
-//    private var listener: OnFragmentInteractionListener? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    //Initializing shared preferences
+    private val PREF_NAME = "First_Report"
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -109,6 +104,17 @@ class AddMinsFragment : Fragment() {
     }
 
     fun createLocationRequest(){
+        val sharedPreferences: SharedPreferences = activity!!.getSharedPreferences(PREF_NAME,0)
+        var flag = true
+        if (sharedPreferences.contains("addInfo"))
+        {
+            var checkInfo = Gson().fromJson<AddInfoObject>(sharedPreferences.all["addInfo"].toString(),AddInfoObject::class.java)
+            var difference = System.currentTimeMillis()/1000 - checkInfo.timestamp.toLong()
+            if (difference<30)
+            {
+                flag = false
+            }
+        }
         val locationRequest = LocationRequest.create().apply {
             interval = 1000
             fastestInterval = 1000
@@ -130,7 +136,7 @@ class AddMinsFragment : Fragment() {
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null /* Looper */)
             Log.d(TAG, "Requesting locaion updates!")
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                if (location != null) {
+                if (location != null && flag) {
                     Log.d(TAG, "Longitude: ${location.longitude}, Latitude: ${location.latitude}")
                     if (locationSettingsResponse.locationSettingsStates.isGpsUsable) {
                         Log.d(TAG, "the gps is useable!")
@@ -151,6 +157,10 @@ class AddMinsFragment : Fragment() {
                                 var destination = destinationStationSp.selectedItem.toString()
                                 val deviceID = Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
                                 var addInfo = AddInfoObject(minutes, deviceID, i, destination, timestamp)
+
+                                val editor = sharedPreferences.edit()
+                                editor.putString("addInfo",Gson().toJson(addInfo).toString())
+                                editor.apply()
                                 waitingPath.push().setValue(addInfo)
                                 Log.d(TAG, "Waiting minutes have been added: ${addInfo.minutes}")
                                 flag = true
@@ -160,6 +170,11 @@ class AddMinsFragment : Fragment() {
                         if (!flag)
                         {
                             Log.d(TAG, "You are not inside a train station!")
+                            AlertDialog.Builder(context)
+                                .setTitle("את/ה לא בתחנת רכבת")
+                                .setMessage("אתה חייב להיות בתוך תחנת רכבת כדי לדווח על איחור.")
+                                .setPositiveButton("הבנתי", null)
+                                .show()
                         }
                     }
                 }
