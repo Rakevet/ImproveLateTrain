@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LateTrain</string>
+    <string name="title_dashboard">דשבורד</string>
+    <string name="title_home">בית</string>
+    <string name="title_notifications">עדכונים</string>
+    <string name="live_info_display_text">"שידור חי: הרכבת עיכבה אותנו ב %1$d  דקות!</string>
+</resources>
