@@ -3,6 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="live_info_display_text">Live: we have been delayed for %1$d minutes</string>
     <string-array name="stations">
         <item>לאן פניך מועדות?</item>
         <item>אופקים</item>
