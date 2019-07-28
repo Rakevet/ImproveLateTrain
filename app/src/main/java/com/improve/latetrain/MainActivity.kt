@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                             sum += infoChild.minutes
                     }
                     //sum.toString()
-                    live_minutes.text = "שידור חי: הרכבת עיכבה אותנו ב${sum.toString()} דקות!"
+                    live_minutes.text = sum.toString()
                 }
 
             }
