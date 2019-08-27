@@ -28,7 +28,7 @@
                 app:layout_constraintRight_toRightOf="@id/topLayout"
                 android:textColor="@android:color/white"
                 android:text="כמות הדקות שרכבת ישראל עיכבה אותנו"
-                android:fontFamily="@font/levenim_mt"
+                android:fontFamily="@font/comixno2_medium"
                 android:textSize="19sp"
 
         />
@@ -41,7 +41,7 @@
                 app:layout_constraintLeft_toRightOf="@+id/topLayout"
                 tools:text="5000"
                 android:textSize="30sp"
-                android:fontFamily="@font/levenim_mt"
+                android:fontFamily="@font/comixno2_medium"
                 android:textColor="#f9c871"
         />
 

@@ -12,7 +12,7 @@ import android.widget.TextView
 class SpinnerAdapter(context: Context, layoutResource: Int, var items: List<String>) :
     ArrayAdapter<String>(context, layoutResource, items) {
 
-    val font: Typeface = Typeface.createFromAsset(context.assets, "font/levenim_mt.ttf")
+   val font: Typeface = Typeface.createFromAsset(context.assets, "font/comixno2_medium.ttf")
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view =  super.getView(position, convertView, parent) as TextView

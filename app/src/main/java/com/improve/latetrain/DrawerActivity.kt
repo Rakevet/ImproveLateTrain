@@ -18,10 +18,6 @@ import kotlinx.android.synthetic.main.content_drawer.*
 
 class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-
-    private val instance = FirebaseDatabase.getInstance()
-    private val totalMinutesLate = instance.getReference(FirebaseInfo.TOTAL_TIME_PATH)
-
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         val fragment = when (item.itemId) {
             R.id.navigation_add_mins -> AddMinsFragment.newInstance()
@@ -54,6 +50,8 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         bottomNavView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         bottomNavView.selectedItemId = R.id.navigation_complaints
 
+        val instance = FirebaseDatabase.getInstance()
+        val totalMinutesLate = instance.getReference(FirebaseInfo.TOTAL_TIME_PATH)
         totalMinutesLate.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
 

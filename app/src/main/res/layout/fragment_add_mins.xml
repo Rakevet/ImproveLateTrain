@@ -62,7 +62,7 @@
             android:text="@string/your_location"
             android:textSize="20sp"
             android:textColor="#e6a430"
-            android:fontFamily="@font/levenim_mt"
+            android:fontFamily="@font/comixno2_medium"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
     />
@@ -85,7 +85,7 @@
             android:text="לאן תגיע/י"
             android:textSize="20sp"
             android:textColor="#e6a430"
-            android:fontFamily="@font/levenim_mt"
+            android:fontFamily="@font/comixno2_medium"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
     />
@@ -108,7 +108,7 @@
             android:text="זמן האיחור בדקות"
             android:textSize="20sp"
             android:textColor="#e6a430"
-            android:fontFamily="@font/levenim_mt"
+            android:fontFamily="@font/comixno2_medium"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
     />
@@ -154,7 +154,7 @@
             app:layout_constraintBottom_toBottomOf="@id/your_location_tv"
             app:layout_constraintRight_toLeftOf="@id/second_text_guideline"
             android:textColor="@android:color/black"
-            android:fontFamily="@font/levenim_mt"
+            android:fontFamily="@font/comixno2_medium"
             android:textSize="18sp"
             android:layout_marginRight="13dp"
     />
@@ -180,7 +180,7 @@
             android:background="@drawable/round_shape"
             android:textColor="@android:color/white"
             android:text="דווח!"
-            android:fontFamily="@font/levenim_mt"
+            android:fontFamily="@font/comixno2_medium"
             android:textSize="24sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
