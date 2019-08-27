@@ -1,43 +1,49 @@
 package com.improve.latetrain
 
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.TextView
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.improve.latetrain.R
+import com.google.firebase.database.ValueEventListener
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    val TAG = "MAIN_ACTIVITY_TAG"
+
+
+    private val instance = FirebaseDatabase.getInstance()
+    private val totalMinutesLate = instance.getReference(FirebaseInfo.TOTAL_TIME_PATH)
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.navigation_add_mins -> {
-                supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, AddMinsFragment()).commit()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_history -> {
-                supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, HistoryFragment()).commit()
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_complaints -> {
-                supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, ComplaintsFragment()).commit()
-                return@OnNavigationItemSelectedListener true
-            }
+        val fragment = when (item.itemId) {
+            R.id.navigation_add_mins -> AddMinsFragment.newInstance()
+            R.id.navigation_history -> HistoryFragment.newInstance()
+            R.id.navigation_complaints -> ComplaintsFragment.newInstance()
+            else -> ComplaintsFragment.newInstance()
         }
-        false
+        supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit()
+        true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //Bottom navigation view setup
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
-
-        //Get reference to firebase database at "Messages"
-        val instance = FirebaseDatabase.getInstance()
-        //val ref = instance.getReference("Waiting")
-
-
-        //ref.push().setValue()
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        navView.selectedItemId = R.id.navigation_complaints
+
+        totalMinutesLate.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {}
+
+            override fun onDataChange(p0: DataSnapshot) {
+                //live_minutes.text = String.format(getString(R.string.live_info_display_text), p0.value)
+                live_minutes.text = p0.value.toString()
+            }
+        })
     }
 }

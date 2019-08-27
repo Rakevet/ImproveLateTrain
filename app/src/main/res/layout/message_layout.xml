@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/message_constraint_holder"
+>
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.2"
+            android:id="@+id/left_guideline_ml"
+    />
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.8"
+            android:id="@+id/right_guideline_ml"
+    />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/message_constraint_part"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/message_constraint_holder"
+            app:layout_constraintLeft_toLeftOf="@id/message_constraint_holder"
+            app:layout_constraintRight_toLeftOf="@id/right_guideline_ml"
+            android:layout_margin="8dp"
+    >
+
+        <TextView
+                app:layout_constraintTop_toTopOf="@+id/message_constraint_part"
+                app:layout_constraintLeft_toLeftOf="@+id/message_constraint_part"
+                android:layout_margin="0dp"
+                android:id="@+id/message_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="kjasdfkjashdfkjhasdkjfhaskjdfhaskjdhf kjashdfkjashfkjahsdf skjdafhaskjdhfaksjdhf jksdahfsakjhfd"
+                android:background="@drawable/message_bg"
+                android:textSize="20sp"
+                android:textColor="@android:color/white"
+        />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,60 +1,173 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   android:background="@android:color/white"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="match_parent"
-                                                   tools:context="com.improve.latetrain.AddMinsFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-
-    <EditText
-            android:id="@+id/minLateEt"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/departStationEt"
-            android:layout_marginTop="16dp"
-            android:minWidth="70dp"
-            android:backgroundTint="@android:color/holo_red_light"
-            android:inputType="number"
-            android:textColorHint="@color/colorAccent"
-            android:hint="How long are you delayed?"/>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.improve.latetrain.AddMinsFragment">
 
 
-    <EditText
-            android:id="@+id/departStationEt"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="16dp"
-            android:textColorHint="@color/colorAccent"
-            android:backgroundTint="@android:color/holo_red_light"
-            android:minWidth="70dp"
-            android:hint="Where are you departing from?"/>
-
-    <EditText
-            android:id="@+id/destinationStationEt"
-            android:textColorHint="@color/colorAccent"
+    <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/departStationEt"
-            android:backgroundTint="@android:color/holo_red_light"
-            android:minWidth="70dp"
-            android:hint="Where is your train going to?"/>
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.08"
+            android:id="@+id/left_guideline"
+    />
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.92"
+            android:id="@+id/right_guideline"
+    />
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.08"
+            android:id="@+id/top_guideline"
+    />
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.93"
+            android:id="@+id/bottom_guideline"
+    />
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.65"
+            android:id="@+id/second_text_guideline"
+    />
+    <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toTopOf="@+id/your_location_tv"
+            app:layout_constraintRight_toLeftOf="@+id/right_guideline"
+            app:layout_constraintLeft_toRightOf="@+id/left_guideline"
+            android:background="#d9d9d9"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+    />
+    <TextView
+            android:id="@+id/your_location_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toLeftOf="@id/right_guideline"
+            app:layout_constraintTop_toTopOf="@id/top_guideline"
+            android:text="מיקומך"
+            android:textSize="20sp"
+            android:textColor="#e6a430"
+            android:fontFamily="@font/levenim_mt"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+    />
+    <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toTopOf="@+id/where_go_tv"
+            app:layout_constraintRight_toLeftOf="@+id/right_guideline"
+            app:layout_constraintLeft_toRightOf="@+id/left_guideline"
+            android:background="#d9d9d9"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+    />
+    <TextView
+            android:id="@+id/where_go_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toLeftOf="@id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@id/your_location_tv"
+            android:text="לאן תגיע/י"
+            android:textSize="20sp"
+            android:textColor="#e6a430"
+            android:fontFamily="@font/levenim_mt"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+    />
+    <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toTopOf="@+id/late_minutes_tv"
+            app:layout_constraintRight_toLeftOf="@+id/right_guideline"
+            app:layout_constraintLeft_toRightOf="@+id/left_guideline"
+            android:background="#d9d9d9"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+    />
+    <TextView
+            android:id="@+id/late_minutes_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toLeftOf="@id/right_guideline"
+            app:layout_constraintTop_toBottomOf="@id/where_go_tv"
+            android:text="זמן האיחור בדקות"
+            android:textSize="20sp"
+            android:textColor="#e6a430"
+            android:fontFamily="@font/levenim_mt"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+    />
+    <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            app:layout_constraintTop_toBottomOf="@+id/late_minutes_tv"
+            app:layout_constraintRight_toLeftOf="@+id/right_guideline"
+            app:layout_constraintLeft_toRightOf="@+id/left_guideline"
+            android:background="#d9d9d9"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+    />
+    <Spinner
+            android:id="@+id/minLateEt"
+            android:background="@drawable/scroll_arrow"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/late_minutes_tv"
+            app:layout_constraintBottom_toBottomOf="@+id/late_minutes_tv"
+            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+    />
+
+
+    <Spinner
+            android:id="@+id/destinationStationSp"
+            android:background="@drawable/scroll_arrow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/where_go_tv"
+            app:layout_constraintBottom_toBottomOf="@id/where_go_tv"
+            app:layout_constraintRight_toRightOf="@+id/second_text_guideline"
+            app:layout_constraintLeft_toLeftOf="@id/left_guideline"
+            android:gravity="right"
+
+    />
+    <TextView
+            android:id="@+id/station_location_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="את/ה לא בתחנת רכבת"
+            app:layout_constraintTop_toTopOf="@id/your_location_tv"
+            app:layout_constraintBottom_toBottomOf="@id/your_location_tv"
+            app:layout_constraintRight_toLeftOf="@id/second_text_guideline"
+            android:textColor="@android:color/black"
+            android:fontFamily="@font/levenim_mt"
+            android:textSize="18sp"
+            android:layout_marginRight="13dp"
+    />
 
     <Button
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@color/colorAccent"
-            android:text="Share"
+            android:id="@+id/addMinBtn"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/bottom_guideline"
+            android:background="@drawable/report_button"
             android:textColor="@android:color/white"
-            android:textSize="24sp"
-            android:layout_margin="16dp"/>
+            android:textSize="24sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
