@@ -20,6 +20,7 @@ import android.widget.Spinner
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
@@ -68,6 +69,7 @@ class AddMinsFragment : Fragment() {
         //Reading the stations locations from txt file
         listOfLocations = mutableMapOf()
         val stationNames = arrayListOf<String>()
+        (animation_layout as LottieAnimationView).playAnimation()
         activity?.assets?.open("trainstationscoordinates.txt")?.bufferedReader(charset("windows-1255    "))?.useLines {
             it.forEach { line ->
                 var stringList: List<String> = line.split(":", ",")

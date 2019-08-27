@@ -25,7 +25,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.core:core-ktx:1.0.2'
     implementation 'com.google.android.material:material:1.0.0'
@@ -43,6 +43,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     //Gson
     implementation 'com.google.code.gson:gson:2.8.2'
+    //lottie
+    implementation 'com.airbnb.android:lottie:3.0.7'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'

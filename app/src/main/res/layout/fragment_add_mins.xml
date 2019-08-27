@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintRight_toLeftOf="@id/right_guideline"
             app:layout_constraintTop_toTopOf="@id/top_guideline"
-            android:text="מיקומך"
+            android:text="@string/your_location"
             android:textSize="20sp"
             android:textColor="#e6a430"
             android:fontFamily="@font/levenim_mt"
@@ -159,15 +159,28 @@
             android:layout_marginRight="13dp"
     />
 
+    <com.airbnb.lottie.LottieAnimationView android:layout_width="250dp"
+                                           android:layout_height="250dp"
+                                           android:id="@+id/animation_layout"
+                                           app:layout_constraintStart_toStartOf="parent"
+                                           app:layout_constraintEnd_toEndOf="parent"
+                                           app:lottie_rawRes="@raw/animation2"
+                                           app:layout_constraintBottom_toBottomOf="@id/bottom_guideline"
+                                           app:lottie_repeatMode="restart"
+                                           app:lottie_loop="true"/>
+
     <Button
             android:id="@+id/addMinBtn"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/bottom_guideline"
-            android:background="@drawable/report_button"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintRight_toRightOf="@id/animation_layout"
+            app:layout_constraintLeft_toLeftOf="@id/animation_layout"
+            app:layout_constraintBottom_toBottomOf="@id/animation_layout"
+            app:layout_constraintTop_toTopOf="@id/animation_layout"
+            android:background="@drawable/round_shape"
             android:textColor="@android:color/white"
+            android:text="דווח!"
+            android:fontFamily="@font/levenim_mt"
             android:textSize="24sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
