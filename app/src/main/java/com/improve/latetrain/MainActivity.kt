@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
             R.id.navigation_add_mins -> AddMinsFragment.newInstance()
             R.id.navigation_history -> HistoryFragment.newInstance()
             R.id.navigation_complaints -> ComplaintsFragment.newInstance()
-            else -> ComplaintsFragment()
+            else -> ComplaintsFragment.newInstance()
         }
         supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit()
         true
@@ -31,10 +31,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
         //Bottom navigation view setup
+        val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
-        navView.selectedItemId = R.id.navigation_add_mins
+        navView.selectedItemId = R.id.navigation_complaints
 
         totalMinutesLate.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}

@@ -1,35 +1,20 @@
 package com.improve.latetrain
 
-import android.content.Context
-import android.net.Uri
+
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.fragment_complaints.*
 
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [ComplaintsFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [ComplaintsFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class ComplaintsFragment : Fragment() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,16 +24,47 @@ class ComplaintsFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_complaints, container, false)
     }
 
-    override fun onDetach() {
-        super.onDetach()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        //Get reference to firebase database at "Messages"
+        val instance = FirebaseDatabase.getInstance()
+        val ref = instance.getReference("Messages/")
+
+        val uid = Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
+
+        var linearLayoutManager = LinearLayoutManager(activity!!.applicationContext, RecyclerView.VERTICAL, false)
+        rv.layoutManager = linearLayoutManager
+        var adapter = MessagesAdapter(uid)
+        rv.adapter = adapter
+        rv.scrollToPosition(adapter.list.size - 1)
+
+        val postListener = object : ChildEventListener {
+            override fun onChildMoved(p0: DataSnapshot, p1: String?) {}
+            override fun onChildChanged(p0: DataSnapshot, p1: String?) {}
+            override fun onChildRemoved(p0: DataSnapshot) {}
+
+            override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
+                var message = dataSnapshot.getValue(Message::class.java)
+                adapter.list.add(message!!)
+                rv.scrollToPosition(adapter.list.size - 1)
+            }
+            override fun onCancelled(databaseError: DatabaseError) {}
+        }
+        ref.addChildEventListener(postListener)
+        send_btn.setOnClickListener {
+            if(write_et.text.toString()!=""){
+                var message = Message(write_et.text.toString(), uid)
+                ref.push().setValue(message)
+                write_et.setText("")
+            }
+        }
     }
+
 
     companion object {
         @JvmStatic
-        fun newInstance() =
-            ComplaintsFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
+        fun newInstance() = ComplaintsFragment()
+
     }
 }
