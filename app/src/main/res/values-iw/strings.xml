@@ -5,4 +5,5 @@
     <string name="title_home">בית</string>
     <string name="title_notifications">עדכונים</string>
     <string name="live_info_display_text">"שידור חי: הרכבת עיכבה אותנו ב %1$d  דקות!</string>
+    <string name="your_location">מיקומך</string>
 </resources>
