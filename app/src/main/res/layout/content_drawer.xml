@@ -18,19 +18,38 @@
             android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:background="@drawable/live_bar"
+            android:background="@drawable/live_container"
     >
         <TextView
-                android:id="@+id/textlivebar_tv"
+                android:id="@+id/live_text_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/topLayout"
                 app:layout_constraintRight_toRightOf="@id/topLayout"
+                app:layout_constraintLeft_toLeftOf="@id/topLayout"
+                android:text="שידור חי"
+                android:background="@drawable/white_live_container"
+                android:layout_margin="8dp"
+                android:textSize="16sp"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:textColor="#033675"
+                android:fontFamily="@font/comixno2_bold"
+        />
+        <TextView
+                android:id="@+id/textlivebar_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/live_text_tv"
+                app:layout_constraintRight_toRightOf="@id/topLayout"
+                app:layout_constraintLeft_toLeftOf="@id/topLayout"
                 android:textColor="@android:color/white"
                 android:text="כמות הדקות שרכבת ישראל עיכבה אותנו"
                 android:fontFamily="@font/comixno2_medium"
                 android:textSize="19sp"
-
+                android:layout_margin="10dp"
         />
         <TextView
                 android:id="@+id/live_minutes"

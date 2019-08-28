@@ -3,17 +3,18 @@
 
     <item
             android:id="@+id/navigation_add_mins"
-            android:icon="@drawable/ic_home_black_24dp"
-            android:title="@string/title_home"/>
+            android:icon="@drawable/ic_report_black_24dp"
+            android:title="דווח"/>
+    <item
+            android:id="@+id/navigation_complaints"
+            android:icon="@drawable/ic_chat_black_24dp"
+            android:title="תלונות"/>
 
     <item
             android:id="@+id/navigation_history"
-            android:icon="@drawable/ic_dashboard_black_24dp"
-            android:title="History"/>
+            android:icon="@drawable/ic_photo_black_24dp"
+            android:title="תמונות"/>
 
-    <item
-            android:id="@+id/navigation_complaints"
-            android:icon="@drawable/ic_notifications_black_24dp"
-            android:title="Complaints"/>
+
 
 </menu>

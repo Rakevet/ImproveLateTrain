@@ -145,29 +145,29 @@
             android:gravity="right"
 
     />
-    <TextView
-            android:id="@+id/station_location_tv"
-            android:layout_width="wrap_content"
+    <Spinner
+            android:id="@+id/currentStationSp"
+            android:background="@drawable/scroll_arrow"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="את/ה לא בתחנת רכבת"
-            app:layout_constraintTop_toTopOf="@id/your_location_tv"
+            app:layout_constraintTop_toTopOf="@+id/your_location_tv"
             app:layout_constraintBottom_toBottomOf="@id/your_location_tv"
-            app:layout_constraintRight_toLeftOf="@id/second_text_guideline"
-            android:textColor="@android:color/black"
-            android:fontFamily="@font/comixno2_medium"
-            android:textSize="18sp"
-            android:layout_marginRight="13dp"
+            app:layout_constraintRight_toRightOf="@+id/second_text_guideline"
+            app:layout_constraintLeft_toLeftOf="@id/left_guideline"
+            android:gravity="right"
+
     />
 
-    <com.airbnb.lottie.LottieAnimationView android:layout_width="250dp"
-                                           android:layout_height="250dp"
-                                           android:id="@+id/animation_layout"
-                                           app:layout_constraintStart_toStartOf="parent"
-                                           app:layout_constraintEnd_toEndOf="parent"
-                                           app:lottie_rawRes="@raw/animation2"
-                                           app:layout_constraintBottom_toBottomOf="@id/bottom_guideline"
-                                           app:lottie_repeatMode="restart"
-                                           app:lottie_loop="true"/>
+    <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:id="@+id/animation_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:lottie_rawRes="@raw/animation2"
+            app:layout_constraintBottom_toBottomOf="@id/bottom_guideline"
+            app:lottie_repeatMode="restart"
+            app:lottie_loop="true"/>
 
     <Button
             android:id="@+id/addMinBtn"

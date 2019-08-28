@@ -28,22 +28,23 @@ import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_add_mins.*
 import java.util.*
 import java.lang.reflect.AccessibleObject.setAccessible
+import kotlin.collections.ArrayList
 
 
 class AddMinsFragment : Fragment() {
 
     //Locations references
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var listOfLocations: MutableMap<String, Location>
-    private lateinit var locationCallback: LocationCallback
-    val locationRequest = LocationRequest.create().apply {
-        interval = 1000
-        fastestInterval = 1000
-        priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-    }
-    val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-
-    //Get reference to firebase database at "Messages"
+//    private lateinit var fusedLocationClient: FusedLocationProviderClient
+//    private lateinit var listOfLocations: MutableMap<String, Location>
+//    private lateinit var locationCallback: LocationCallback
+//    val locationRequest = LocationRequest.create().apply {
+//        interval = 1000
+//        fastestInterval = 1000
+//        priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+//    }
+//    val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+//
+//    //Get reference to firebase database at "Messages"
     private val instance = FirebaseDatabase.getInstance()
     private val waitingPath = instance.getReference("Waiting")
     private val totalWaitingPath = instance.getReference(FirebaseInfo.TOTAL_TIME_PATH)
@@ -53,9 +54,9 @@ class AddMinsFragment : Fragment() {
     //Initializing shared preferences
     private val PREF_NAME = "First_Report"
 
-    var isPermissionsLocationOn = false
-    var isLocationUsable = 0
-    var isLocationRequested = false
+//    var isPermissionsLocationOn = false
+//    var isLocationUsable = 0
+//    var isLocationRequested = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
             View? = inflater.inflate(R.layout.fragment_add_mins, container, false)
@@ -64,68 +65,115 @@ class AddMinsFragment : Fragment() {
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!.applicationContext)
-        requestPermissions()
-        //Reading the stations locations from txt file
-        listOfLocations = mutableMapOf()
-        val stationNames = arrayListOf<String>()
+//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!.applicationContext)
+//        requestPermissions()
+//        //Reading the stations locations from txt file
+//        listOfLocations = mutableMapOf()
+//        val stationNames = arrayListOf<String>()
+//        (animation_layout as LottieAnimationView).playAnimation()
+//        activity?.assets?.open("trainstationscoordinates.txt")?.bufferedReader(charset("windows-1255    "))?.useLines {
+//            it.forEach { line ->
+//                var stringList: List<String> = line.split(":", ",")
+//                var geoLocation: Location = Location("").apply {
+//                    latitude = stringList[1].toDouble()
+//                    longitude = stringList[2].toDouble()
+//                }
+//                listOfLocations[stringList[0]] = geoLocation
+//                stationNames.add(stringList[0])
+//            }
+//        }
+//
+//        //Request location updates
+//        locationCallback = object : LocationCallback() {
+//            override fun onLocationResult(locationResult: LocationResult?) {
+//                locationResult ?: return
+//                for (i in listOfLocations.keys) {
+//                    val result = FloatArray(1)
+//                    Location.distanceBetween(
+//                        locationResult.lastLocation.latitude, locationResult.lastLocation.longitude,
+//                        listOfLocations[i]!!.latitude, listOfLocations[i]!!.longitude, result
+//                    )
+//                    if (result[0] < 1000f) {
+//                        station_location_tv.text = i
+//                        break
+//                    }
+//                }
+//            }
+//        }
+//        val client: SettingsClient = LocationServices.getSettingsClient(activity!!.applicationContext)
+//        var task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
+//        task.addOnSuccessListener { locationSettingsResponse ->
+//            if (locationSettingsResponse.locationSettingsStates.isLocationUsable)
+//            {
+//                Log.d(TAG, "Location is on!")
+//                if(requestPermissions())
+//                {
+//                    fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null /* Looper */)
+//                    isPermissionsLocationOn = true
+//                    Log.d(TAG, "Requesting location updates!")
+//                }
+//            }
+//        }
+//        task.addOnFailureListener { exception ->
+//            if (exception is ResolvableApiException) {
+//                try {
+//                    //TODO We need to show in the app that their loction is off
+//                    Log.d("TESTS", "Showing request for changing settings")
+//                    exception.startResolutionForResult(activity!!, 0x1)
+//                } catch (sendEx: IntentSender.SendIntentException) {
+//                }
+//            }
+//        }
+//
+
+        //lottie animation
         (animation_layout as LottieAnimationView).playAnimation()
-        activity?.assets?.open("trainstationscoordinates.txt")?.bufferedReader(charset("windows-1255    "))?.useLines {
-            it.forEach { line ->
-                var stringList: List<String> = line.split(":", ",")
-                var geoLocation: Location = Location("").apply {
-                    latitude = stringList[1].toDouble()
-                    longitude = stringList[2].toDouble()
-                }
-                listOfLocations[stringList[0]] = geoLocation
-                stationNames.add(stringList[0])
+        //sending report
+        addMinBtn.setOnClickListener {
+            var minutes = 0
+            if (minLateEt.selectedItem.toString() != "") {
+                minutes = minLateEt.selectedItem.toString().toInt()
             }
-        }
-
-        //Request location updates
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                locationResult ?: return
-                for (i in listOfLocations.keys) {
-                    val result = FloatArray(1)
-                    Location.distanceBetween(
-                        locationResult.lastLocation.latitude, locationResult.lastLocation.longitude,
-                        listOfLocations[i]!!.latitude, listOfLocations[i]!!.longitude, result
-                    )
-                    if (result[0] < 1000f) {
-                        station_location_tv.text = i
-                        break
-                    }
-                }
-            }
-        }
-        val client: SettingsClient = LocationServices.getSettingsClient(activity!!.applicationContext)
-        var task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
-        task.addOnSuccessListener { locationSettingsResponse ->
-            if (locationSettingsResponse.locationSettingsStates.isLocationUsable)
+            val isDestinationSelected: Boolean = !(destinationStationSp.selectedItem.toString().contains("לאן פניך מועדות"))
+            val isCurrentStationSelected: Boolean = !(currentStationSp.selectedItem.toString().contains("באיזו תחנה הינך?"))
+            if (minutes>0 && isDestinationSelected && isCurrentStationSelected)
             {
-                Log.d(TAG, "Location is on!")
-                if(requestPermissions())
-                {
-                    fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null /* Looper */)
-                    isPermissionsLocationOn = true
-                    Log.d(TAG, "Requesting location updates!")
-                }
+                totalWaitingPath.runTransaction(object : Transaction.Handler {
+                    override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
+
+                        p0?.message?.let {
+                            Log.d("ERROR_PUSH", it)
+                        }
+
+                        p2?.let {
+                            Log.d("ERROR_PUSH", p2.childrenCount.toString())
+                        }
+                    }
+
+                    override fun doTransaction(mutableData: MutableData): Transaction.Result {
+                        if (mutableData.getValue(Int::class.java) == 0) {
+                            mutableData.value = minutes
+                            return Transaction.success(mutableData)
+                        } else {
+                            val data = mutableData.getValue(Int::class.java)
+                            mutableData.value = data?.plus(minutes)
+                            return Transaction.success(mutableData)
+                        }
+                    }
+                })
             }
         }
-        task.addOnFailureListener { exception ->
-            if (exception is ResolvableApiException) {
-                try {
-                    //TODO We need to show in the app that their loction is off
-                    Log.d("TESTS", "Showing request for changing settings")
-                    exception.startResolutionForResult(activity!!, 0x1)
-                } catch (sendEx: IntentSender.SendIntentException) {
-                }
-            }
-        }
-
-
         //Spinners
+        val adapterCurrentLocations = SpinnerAdapter(
+            activity!!.applicationContext,
+            R.layout.spinner_dropdown_layout,
+            resources.getStringArray(R.array.stations).toList()
+        )
+        val listOfStations = adapterCurrentLocations.items as ArrayList<String>
+        listOfStations[0] = "באיזו תחנה הינך?"
+        adapterCurrentLocations.items = listOfStations
+        currentStationSp.adapter = adapterCurrentLocations
+
         val adapterLocations = SpinnerAdapter(
             activity!!.applicationContext,
             R.layout.spinner_dropdown_layout,
@@ -161,114 +209,114 @@ class AddMinsFragment : Fragment() {
         }
 
 
-        addMinBtn.setOnClickListener {
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
-            if (isPermissionsLocationOn)
-            {
-                fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                    if (location != null) {
-                        Log.d(TAG, "Longitude: ${location.longitude}, Latitude: ${location.latitude}")
-                        Log.d(TAG, "the gps is useable!")
-                        var isInsideStation = false
-                        for (i in listOfLocations.keys) {
-                            val result = FloatArray(1)
-                            Location.distanceBetween(
-                                location.latitude, location.longitude,
-                                listOfLocations[i]!!.latitude, listOfLocations[i]!!.longitude, result
-                            )
-                            if (result[0] < 1000f || true) {
-                                isInsideStation = true
-                                var minutes = 0
-                                if (minLateEt.selectedItem.toString() != "") {
-                                    minutes = minLateEt.selectedItem.toString().toInt()
-                                }
-                                val tsLong = System.currentTimeMillis() / 1000
-                                val timestamp = tsLong
-                                var destination = destinationStationSp.selectedItem.toString()
-                                val deviceID = Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
-                                var addInfo = AddInfoObject(minutes, deviceID, i, destination, timestamp)
+//        addMinBtn.setOnClickListener {
+//            fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
+//            if (isPermissionsLocationOn)
+//            {
+//                fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+//                    if (location != null) {
+//                        Log.d(TAG, "Longitude: ${location.longitude}, Latitude: ${location.latitude}")
+//                        Log.d(TAG, "the gps is useable!")
+//                        var isInsideStation = false
+//                        for (i in listOfLocations.keys) {
+//                            val result = FloatArray(1)
+//                            Location.distanceBetween(
+//                                location.latitude, location.longitude,
+//                                listOfLocations[i]!!.latitude, listOfLocations[i]!!.longitude, result
+//                            )
+//                            if (result[0] < 1000f || true) {
+//                                isInsideStation = true
+//                                var minutes = 0
+//                                if (minLateEt.selectedItem.toString() != "") {
+//                                    minutes = minLateEt.selectedItem.toString().toInt()
+//                                }
+//                                val tsLong = System.currentTimeMillis() / 1000
+//                                val timestamp = tsLong
+//                                var destination = destinationStationSp.selectedItem.toString()
+//                                val deviceID = Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
+//                                var addInfo = AddInfoObject(minutes, deviceID, i, destination, timestamp)
+//
+//                                totalWaitingPath.runTransaction(object : Transaction.Handler {
+//                                    override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
+//
+//                                        p0?.message?.let {
+//                                            Log.d("ERROR_PUSH", it)
+//                                        }
+//
+//                                        p2?.let {
+//                                            Log.d("ERROR_PUSH", p2.childrenCount.toString())
+//                                        }
+//                                    }
+//
+//                                    override fun doTransaction(mutableData: MutableData): Transaction.Result {
+//                                        if (mutableData.getValue(Int::class.java) == 0) {
+//                                            mutableData.value = minutes
+//                                            return Transaction.success(mutableData);
+//                                        } else {
+//                                            val data = mutableData.getValue(Int::class.java)
+//                                            mutableData.value = data?.plus(minutes)
+//                                            return Transaction.success(mutableData)
+//                                        }
+//                                    }
+//                                })
+//                                Log.d(TAG, "Waiting minutes have been added: ${addInfo.minutes}")
+//
+//
+//                                break
+//                            }
+//                        }
+//                        if (!isInsideStation) {
+//                            Log.d(TAG, "You are not inside a train station!")
+//                            AlertDialog.Builder(context)
+//                                .setTitle("את/ה לא בתחנת רכבת")
+//                                .setMessage("אתה חייב להיות בתוך תחנת רכבת כדי לדווח על איחור.")
+//                                .setPositiveButton("הבנתי", null)
+//                                .show()
+//                        }
+//                    } else {
+//                        Log.d(TAG, "Location is null")
+//                    }
+//                }
+//                    .addOnFailureListener {
+//                        Log.d(TAG, "$it")
+//                    }
+//            }
+//            else {
+//                requestPermissions()
+//                task = client.checkLocationSettings(builder.build())
+//            }
+//
+//        }
 
-                                totalWaitingPath.runTransaction(object : Transaction.Handler {
-                                    override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
-
-                                        p0?.message?.let {
-                                            Log.d("ERROR_PUSH", it)
-                                        }
-
-                                        p2?.let {
-                                            Log.d("ERROR_PUSH", p2.childrenCount.toString())
-                                        }
-                                    }
-
-                                    override fun doTransaction(mutableData: MutableData): Transaction.Result {
-                                        if (mutableData.getValue(Int::class.java) == 0) {
-                                            mutableData.value = minutes
-                                            return Transaction.success(mutableData);
-                                        } else {
-                                            val data = mutableData.getValue(Int::class.java)
-                                            mutableData.value = data?.plus(minutes)
-                                            return Transaction.success(mutableData)
-                                        }
-                                    }
-                                })
-                                Log.d(TAG, "Waiting minutes have been added: ${addInfo.minutes}")
-
-
-                                break
-                            }
-                        }
-                        if (!isInsideStation) {
-                            Log.d(TAG, "You are not inside a train station!")
-                            AlertDialog.Builder(context)
-                                .setTitle("את/ה לא בתחנת רכבת")
-                                .setMessage("אתה חייב להיות בתוך תחנת רכבת כדי לדווח על איחור.")
-                                .setPositiveButton("הבנתי", null)
-                                .show()
-                        }
-                    } else {
-                        Log.d(TAG, "Location is null")
-                    }
-                }
-                    .addOnFailureListener {
-                        Log.d(TAG, "$it")
-                    }
-            }
-            else {
-                requestPermissions()
-                task = client.checkLocationSettings(builder.build())
-            }
-
-        }
-
-
-    }
-
-    fun requestPermissions() : Boolean{
-        var gotPermissions = false
-        if (ContextCompat.checkSelfPermission(activity!!, android.Manifest.permission.ACCESS_COARSE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED)
-        {
-            Log.d(TAG, "you dont have permissions!")
-            val permissons = arrayOf(
-                android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            )
-            ActivityCompat.requestPermissions(activity!!, permissons, 123)
-        }
-        if (ContextCompat.checkSelfPermission(activity!!, android.Manifest.permission.ACCESS_COARSE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED)
-        {
-            gotPermissions = true
-            Log.d(TAG, "you have permissions!")
-        }
-
-        return gotPermissions
-    }
-
-    fun checkLocationOn() {
-        isLocationRequested = true
 
     }
+
+//    fun requestPermissions() : Boolean{
+//        var gotPermissions = false
+//        if (ContextCompat.checkSelfPermission(activity!!, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+//            != PackageManager.PERMISSION_GRANTED)
+//        {
+//            Log.d(TAG, "you dont have permissions!")
+//            val permissons = arrayOf(
+//                android.Manifest.permission.ACCESS_COARSE_LOCATION,
+//                android.Manifest.permission.ACCESS_FINE_LOCATION
+//            )
+//            ActivityCompat.requestPermissions(activity!!, permissons, 123)
+//        }
+//        if (ContextCompat.checkSelfPermission(activity!!, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+//            == PackageManager.PERMISSION_GRANTED)
+//        {
+//            gotPermissions = true
+//            Log.d(TAG, "you have permissions!")
+//        }
+//
+//        return gotPermissions
+//    }
+
+//    fun checkLocationOn() {
+//        isLocationRequested = true
+//
+//    }
 
     @SuppressLint("MissingPermission")
     fun createLocationRequest() {
