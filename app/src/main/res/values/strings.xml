@@ -91,7 +91,6 @@
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="wait_addmins">חכו!</string>
     <string name="once_in_30_addmins">אפשר לדווח פעם ב30 דקות!</string>
