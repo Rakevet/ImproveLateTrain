@@ -3,52 +3,34 @@ package com.improve.latetrain
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.core.view.GravityCompat
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.navigation.NavigationView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ShareActionProvider
-import androidx.core.view.MenuItemCompat
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.android.synthetic.main.activity_drawer.*
 import kotlinx.android.synthetic.main.content_drawer.*
 
 class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    val sendIntent: Intent = Intent().apply {
-        action = Intent.ACTION_SEND
-        putExtra(Intent.EXTRA_TEXT, "This is my text to send.")
-        type = "text/plain"
-    }
-    private var shareActionProvider: ShareActionProvider? = null
-    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        val fragment = when (item.itemId) {
-            R.id.navigation_add_mins -> AddMinsFragment.newInstance()
-            R.id.navigation_history -> HistoryFragment.newInstance()
-            R.id.navigation_complaints -> ComplaintsFragment.newInstance()
-            else -> ComplaintsFragment.newInstance()
-        }
-        supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit()
-        true
-    }
-    val TAG = "DrawerActivity"
+    private val TAG = "DrawerActivity"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_drawer)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-
-
-        //startActivity(Intent.createChooser(sendIntent, "שיתוף"))
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -60,22 +42,20 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
         navView.setNavigationItemSelectedListener(this)
 
-        //Bottom navigation view setup
-        val bottomNavView: BottomNavigationView = findViewById(R.id.bottom_nav_view)
+        bottomNavView = bottom_nav_view
         bottomNavView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         bottomNavView.selectedItemId = R.id.navigation_add_mins
 
+        live_minutes.text = getString(R.string.no_internet_connection_drawer)
         val instance = FirebaseDatabase.getInstance()
         val totalMinutesLate = instance.getReference(FirebaseInfo.TOTAL_TIME_PATH)
         totalMinutesLate.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
 
             override fun onDataChange(p0: DataSnapshot) {
-                //live_minutes.text = String.format(getString(R.string.live_info_display_text), p0.value)
                 live_minutes.text = p0.value.toString()
             }
         })
-        setShareIntent(sendIntent)
     }
 
     override fun onBackPressed() {
@@ -88,58 +68,80 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.drawer, menu)
-        val item = menu.findItem(R.id.menu_item_share)
-        shareActionProvider = MenuItemCompat.getActionProvider(item) as ShareActionProvider
+        shareActionProvider = ShareActionProvider(this)
+        shareActionProvider?.setShareIntent(Intent.createChooser(sendIntent, getString(R.string.share_drawer)))
         Log.d(TAG, "Menu has been created")
         return super.onCreateOptionsMenu(menu)
     }
 
-    private fun setShareIntent(shareIntent: Intent){
-        shareActionProvider?.setShareIntent(shareIntent)
-    }
-
-
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        Log.d(TAG, "Item in menu has been clicked!")
         when (item.itemId) {
             R.id.menu_item_share -> {
-                startActivity(Intent.createChooser(sendIntent, "שיתוף"))
+                startActivity(Intent.createChooser(sendIntent, getString(R.string.share_drawer)))
                 return true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> {
+                Log.d(TAG, "Item in menu has been clicked!")
+                if (drawer_layout.isDrawerOpen(GravityCompat.START))
+                    drawer_layout.closeDrawer(GravityCompat.START)
+                else
+                    drawer_layout.openDrawer(GravityCompat.START)
+                }
         }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
+        topLayout.visibility = View.GONE
+        nav_view.menu.setGroupCheckable(0, true, true)
+        val fragment = when (item.itemId) {
+            R.id.nav_home -> AddMinsFragment.newInstance()
+            R.id.nav_about_us -> AboutUsFragment.newInstance()
+            else -> WriteUsFragment.newInstance()
+        }
         when (item.itemId) {
             R.id.nav_home -> {
-                // Handle the camera action
+                topLayout.visibility = View.VISIBLE
+                bottomNavView.menu.setGroupCheckable(0, true, true)
             }
-            R.id.nav_gallery -> {
-
+            R.id.nav_about_us -> {
+                bottomNavView.menu.setGroupCheckable(0, false, true)
             }
-            R.id.nav_slideshow -> {
-
-            }
-            R.id.nav_tools -> {
-
-            }
-            R.id.nav_share -> {
-
-            }
-            R.id.nav_send -> {
-
+            else -> {
+                bottomNavView.menu.setGroupCheckable(0, false, true)
             }
         }
+        localFragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit()
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private val sendIntent: Intent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_SUBJECT, baseContext?.resources?.getString(R.string.app_name))
+        putExtra(Intent.EXTRA_TEXT, baseContext?.resources?.getString(R.string.share_app_url_drawer) + BuildConfig.APPLICATION_ID)
+        type = "text/plain"
+    }
+    private var shareActionProvider: ShareActionProvider? = null
+    private lateinit var bottomNavView: BottomNavigationView
+    private var localFragmentManager = supportFragmentManager
+    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        bottomNavView.menu.setGroupCheckable(0, true, true)
+        nav_view.menu.getItem(0).isChecked = true
+        topLayout.visibility = View.VISIBLE
+        val fragment = when (item.itemId) {
+            R.id.navigation_add_mins -> AddMinsFragment.newInstance()
+            R.id.navigation_history -> PicturesGalleryFragment.newInstance()
+            R.id.navigation_complaints -> ChatFragment.newInstance()
+            else -> ChatFragment.newInstance()
+        }
+        localFragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit()
+        true
     }
 }

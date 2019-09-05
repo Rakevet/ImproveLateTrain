@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">LateTrain</string>
+    <string name="app_name">רקבת</string>
     <string name="title_dashboard">דשבורד</string>
     <string name="title_home">בית</string>
     <string name="title_notifications">עדכונים</string>
@@ -21,4 +21,39 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="wait_addmins">חכו!</string>
+    <string name="once_in_30_addmins">אפשר לדווח פעם ב30 דקות!</string>
+    <string name="got_it_addmins">הבנתי</string>
+    <string name="where_are_you_going_addmins">לאן פניך מועדות</string>
+    <string name="wich_station_addmins">באיזו תחנה הינך?</string>
+    <string name="no_internet_connection_drawer">אין חיבור לאינטרנט</string>
+    <string name="share_drawer">שיתוף</string>
+    <string name="share_app_url_drawer">https://play.google.com/store/apps/details?id=</string>
+    <string name="upload_photo_gallery">תעלו תמונה</string>
+    <string name="app_email">latetrainisrael@gmail.com</string>
+    <string name="please_fill_all_fields_write_us">נא למלא את כל השדות!</string>
+    <string name="send_email_write_us">שלחו אימייל…</string>
+    <string name="no_email_app_exist_write_us">אין לך אפליקציה ששולחת אימייל על הפלאפון!</string>
+    <string name="live_stream_content">שידור חי</string>
+    <string name="train_waiting_time_content">כמות הדקות שרכבת ישראל עיכבה אותנו</string>
+    <string name="app_name_with_space">Late Train</string>
+    <string name="make_change_about_us">בואו נעשה שינוי יחד ונגרום לרכבת להפסיק לאחר!</string>
+    <string name="developers_about_us">מפתחים:</string>
+    <string name="yishai_greenberg">ישי גרינברג</string>
+    <string name="shani_shulman">שני שולמן</string>
+    <string name="app_version_with_text">גרסא: 1.0.0</string>
+    <string name="where_will_you_go_add_mins">לאן תגיע/י</string>
+    <string name="time_late_minutes_add_mins">זמן האיחור בדקות</string>
+    <string name="report_add_mins">דווח!</string>
+    <string name="type_here_chat">הקלד כאן</string>
+    <string name="message_write_us">הודעה:</string>
+    <string name="send_email_btn_write_us">שלחו אימייל</string>
+    <string name="subject_write_us">נושא:</string>
+    <string name="stay_in_touch_write_us">צרו קשר!</string>
+    <string name="share_text_btn_drawer">Share</string>
+    <string name="home_activity_drawer_drawer">מסך בית</string>
+    <string name="about_activity_drawer_drawer">אודותינו</string>
+    <string name="write_us_activity_drawer_drawer">כתבו לנו</string>
 </resources>

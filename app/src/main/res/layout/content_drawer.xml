@@ -18,6 +18,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
+            android:visibility="visible"
             android:background="@drawable/live_container"
     >
         <TextView
@@ -27,7 +28,7 @@
                 app:layout_constraintTop_toTopOf="@id/topLayout"
                 app:layout_constraintRight_toRightOf="@id/topLayout"
                 app:layout_constraintLeft_toLeftOf="@id/topLayout"
-                android:text="שידור חי"
+                android:text="@string/live_stream_content"
                 android:background="@drawable/white_live_container"
                 android:layout_margin="8dp"
                 android:textSize="16sp"
@@ -46,7 +47,7 @@
                 app:layout_constraintRight_toRightOf="@id/topLayout"
                 app:layout_constraintLeft_toLeftOf="@id/topLayout"
                 android:textColor="@android:color/white"
-                android:text="כמות הדקות שרכבת ישראל עיכבה אותנו"
+                android:text="@string/train_waiting_time_content"
                 android:fontFamily="@font/comixno2_medium"
                 android:textSize="19sp"
                 android:layout_margin="10dp"

@@ -1,6 +1,5 @@
 package com.improve.latetrain
 
-import android.app.ActionBar
 import android.content.Context
 import android.graphics.Typeface
 import android.view.Gravity
@@ -12,7 +11,7 @@ import android.widget.TextView
 class SpinnerAdapter(context: Context, layoutResource: Int, var items: List<String>) :
     ArrayAdapter<String>(context, layoutResource, items) {
 
-   val font: Typeface = Typeface.createFromAsset(context.assets, "font/comixno2_medium.ttf")
+   private val font: Typeface = Typeface.createFromAsset(context.assets, "font/comixno2_medium.ttf")
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view =  super.getView(position, convertView, parent) as TextView

@@ -8,20 +8,8 @@
         tools:context="com.improve.latetrain.AddMinsFragment">
 
 
-    <androidx.constraintlayout.widget.Guideline
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.08"
-            android:id="@+id/left_guideline"
-    />
-    <androidx.constraintlayout.widget.Guideline
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.92"
-            android:id="@+id/right_guideline"
-    />
+
+
     <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,38 +17,28 @@
             app:layout_constraintGuide_percent="0.08"
             android:id="@+id/top_guideline"
     />
-    <androidx.constraintlayout.widget.Guideline
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.93"
-            android:id="@+id/bottom_guideline"
-    />
-    <androidx.constraintlayout.widget.Guideline
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.65"
-            android:id="@+id/second_text_guideline"
-    />
+
     <View
             android:layout_width="0dp"
             android:layout_height="1dp"
             app:layout_constraintBottom_toTopOf="@+id/your_location_tv"
-            app:layout_constraintRight_toLeftOf="@+id/right_guideline"
-            app:layout_constraintLeft_toRightOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             android:background="#d9d9d9"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:gravity="start"
     />
     <TextView
             android:id="@+id/your_location_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintRight_toLeftOf="@id/right_guideline"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/top_guideline"
             android:text="@string/your_location"
+            android:gravity="start"
             android:textSize="20sp"
+            android:layout_marginRight="30dp"
             android:textColor="#e6a430"
             android:fontFamily="@font/comixno2_medium"
             android:paddingTop="10dp"
@@ -70,57 +48,64 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             app:layout_constraintBottom_toTopOf="@+id/where_go_tv"
-            app:layout_constraintRight_toLeftOf="@+id/right_guideline"
-            app:layout_constraintLeft_toRightOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             android:background="#d9d9d9"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:gravity="start"
     />
     <TextView
             android:id="@+id/where_go_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintRight_toLeftOf="@id/right_guideline"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/your_location_tv"
-            android:text="לאן תגיע/י"
+            android:text="@string/where_will_you_go_add_mins"
             android:textSize="20sp"
+            android:layout_marginRight="30dp"
             android:textColor="#e6a430"
             android:fontFamily="@font/comixno2_medium"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
+            android:gravity="start"
     />
     <View
             android:layout_width="0dp"
             android:layout_height="1dp"
             app:layout_constraintBottom_toTopOf="@+id/late_minutes_tv"
-            app:layout_constraintRight_toLeftOf="@+id/right_guideline"
-            app:layout_constraintLeft_toRightOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             android:background="#d9d9d9"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:gravity="start"
     />
     <TextView
             android:id="@+id/late_minutes_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintRight_toLeftOf="@id/right_guideline"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/where_go_tv"
-            android:text="זמן האיחור בדקות"
+            android:text="@string/time_late_minutes_add_mins"
+            android:layout_marginRight="30dp"
             android:textSize="20sp"
             android:textColor="#e6a430"
             android:fontFamily="@font/comixno2_medium"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
+            android:gravity="start"
     />
     <View
             android:layout_width="0dp"
             android:layout_height="1dp"
             app:layout_constraintTop_toBottomOf="@+id/late_minutes_tv"
-            app:layout_constraintRight_toLeftOf="@+id/right_guideline"
-            app:layout_constraintLeft_toRightOf="@+id/left_guideline"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
             android:background="#d9d9d9"
-            android:layout_marginRight="5dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:gravity="start"
     />
     <Spinner
             android:id="@+id/minLateEt"
@@ -129,33 +114,50 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@+id/late_minutes_tv"
             app:layout_constraintBottom_toBottomOf="@+id/late_minutes_tv"
-            app:layout_constraintLeft_toLeftOf="@+id/left_guideline"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="30dp"
+            android:gravity="start"
     />
 
 
     <Spinner
             android:id="@+id/destinationStationSp"
             android:background="@drawable/scroll_arrow"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@+id/where_go_tv"
             app:layout_constraintBottom_toBottomOf="@id/where_go_tv"
-            app:layout_constraintRight_toRightOf="@+id/second_text_guideline"
-            app:layout_constraintLeft_toLeftOf="@id/left_guideline"
-            android:gravity="right"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="30dp"
+            android:gravity="start"
 
     />
     <Spinner
             android:id="@+id/currentStationSp"
             android:background="@drawable/scroll_arrow"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@+id/your_location_tv"
             app:layout_constraintBottom_toBottomOf="@id/your_location_tv"
-            app:layout_constraintRight_toRightOf="@+id/second_text_guideline"
-            app:layout_constraintLeft_toLeftOf="@id/left_guideline"
-            android:gravity="right"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="30dp"
+            android:gravity="start"
 
+    />
+    <TextView
+            android:id="@+id/current_station_location_fam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/your_location_tv"
+            app:layout_constraintBottom_toBottomOf="@id/your_location_tv"
+            app:layout_constraintRight_toRightOf="@+id/destinationStationSp"
+            android:gravity="start"
+            android:layout_marginRight="15dp"
+            android:textColor="@android:color/black"
+            android:fontFamily="@font/comixno2_medium"
+            android:textSize="18sp"
+            tools:text="test test"
+            android:visibility="gone"
     />
 
     <com.airbnb.lottie.LottieAnimationView
@@ -165,21 +167,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:lottie_rawRes="@raw/animation2"
-            app:layout_constraintBottom_toBottomOf="@id/bottom_guideline"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:lottie_repeatMode="restart"
             app:lottie_loop="true"/>
 
     <Button
             android:id="@+id/addMinBtn"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
             app:layout_constraintRight_toRightOf="@id/animation_layout"
             app:layout_constraintLeft_toLeftOf="@id/animation_layout"
             app:layout_constraintBottom_toBottomOf="@id/animation_layout"
             app:layout_constraintTop_toTopOf="@id/animation_layout"
             android:background="@drawable/round_shape"
             android:textColor="@android:color/white"
-            android:text="דווח!"
+            android:text="@string/report_add_mins"
             android:fontFamily="@font/comixno2_medium"
             android:textSize="24sp"/>
 
