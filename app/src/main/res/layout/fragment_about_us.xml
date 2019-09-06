@@ -20,7 +20,7 @@
             android:textColor="@android:color/white"
             android:textSize="64sp"
             android:fontFamily="@font/comixno2_medium"
-            android:text="@string/app_name_with_space"/>
+            android:text="@string/app_name"/>
     <TextView
             android:id="@+id/main_text_tv_fau"
             android:fontFamily="@font/comixno2_medium"
