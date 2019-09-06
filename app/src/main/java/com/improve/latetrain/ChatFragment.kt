@@ -1,6 +1,5 @@
 package com.improve.latetrain
 
-
 import android.os.Bundle
 import android.provider.Settings
 import androidx.fragment.app.Fragment
@@ -11,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_chat.*
-
 
 class ChatFragment : Fragment() {
 
@@ -52,7 +50,9 @@ class ChatFragment : Fragment() {
         ref.addChildEventListener(postListener)
         send_btn.setOnClickListener {
             if(write_et.text.toString().isNotBlank()){
-                val message = Message(write_et.text.toString().trim(), uid)
+                val message = Message()
+                message.message = write_et.text.toString().trim()
+                message.uid = uid
                 ref.push().setValue(message)
                 write_et.text.clear()
             }
@@ -61,7 +61,6 @@ class ChatFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() = ChatFragment()
-
+        fun newInstance(): ChatFragment = ChatFragment()
     }
 }

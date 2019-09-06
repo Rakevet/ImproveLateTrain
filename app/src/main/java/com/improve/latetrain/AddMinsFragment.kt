@@ -4,13 +4,11 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.content.IntentSender
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-import android.location.LocationProvider
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,7 +16,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Spinner
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.airbnb.lottie.LottieAnimationView
@@ -27,23 +24,23 @@ import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_add_mins.*
-import java.io.File
-import java.security.Provider
 import kotlin.math.absoluteValue
-
 
 class AddMinsFragment : Fragment() {
     private val TAG = "ADD_MIN_FRAG_TAG"
     private val LAST_CLICK = "LAST_CLICK"
-    private val LOCATION_PERMISSION_GIVEN = "LOCATION_PERMISSION_GIVEN"
     private val REQUEST_CHECK_SETTINGS = 0x1
     private val MY_PERMISSIONS_REQUEST_LOCATION = 0x2
     private val IS_PERMISSION_REQUEST_GRANTED = "IS_PERMISSION_REQUEST_GRANTED"
+    lateinit var stationsList: MutableMap<String, Location>
+    lateinit var sharedPreferences: SharedPreferences
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val instance = FirebaseDatabase.getInstance()
+    private val totalWaitingPath = instance.getReference(FirebaseInfo.TOTAL_TIME_PATH)
+    private lateinit var locationCallback: LocationCallback
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
             View? = inflater.inflate(R.layout.fragment_add_mins, container, false)
-
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,7 +67,7 @@ class AddMinsFragment : Fragment() {
             }
 
             var minutes = 0
-            if (minLateEt.selectedItem.toString() != "") {
+            if (minLateEt.selectedItem.toString().isNotBlank()) {
                 minutes = minLateEt.selectedItem.toString().toInt()
             }
             val isDestinationSelected: Boolean =
@@ -101,7 +98,7 @@ class AddMinsFragment : Fragment() {
                     }
                 })
             } else {
-                Toast.makeText(context, "נא למלא את המידע הנדרש!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.please_fill_requiered_information_addmins), Toast.LENGTH_SHORT).show()
             }
         }
         //Spinners
@@ -111,7 +108,7 @@ class AddMinsFragment : Fragment() {
             resources.getStringArray(R.array.stations).toList()
         )
         val listOfStations = adapterCurrentLocations.items as ArrayList<String>
-        listOfStations[0] = "באיזו תחנה הינך?"
+        listOfStations[0] = getString(R.string.wich_station_addmins)
         adapterCurrentLocations.items = listOfStations
         currentStationSp.adapter = adapterCurrentLocations
 
@@ -156,6 +153,12 @@ class AddMinsFragment : Fragment() {
 
         activity?.let {
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(it.baseContext)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity?.let {
             if(sharedPreferences.getBoolean(IS_PERMISSION_REQUEST_GRANTED, true))
             {
                 if (ContextCompat.checkSelfPermission(it.baseContext, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -171,6 +174,15 @@ class AddMinsFragment : Fragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        stopLocationUpdates()
+    }
+
+    private fun stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+
     @SuppressLint("MissingPermission")
     fun setLocationRequests() {
         val locationRequest = LocationRequest.create().apply {
@@ -181,9 +193,7 @@ class AddMinsFragment : Fragment() {
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
         val client: SettingsClient = LocationServices.getSettingsClient(context?:return)
         val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
-        task.addOnSuccessListener {
-            sharedPreferences.edit()?.putInt(LOCATION_PERMISSION_GIVEN, 1)?.apply()
-        }
+        task.addOnSuccessListener {}
         task.addOnFailureListener { exception ->
             if (exception is ResolvableApiException) {
                 try {
@@ -202,8 +212,7 @@ class AddMinsFragment : Fragment() {
                     for (i in stationsList.keys) {
                         Location.distanceBetween(
                             lastLocationRecieved.latitude, lastLocationRecieved.longitude,
-                            stationsList[i]?.latitude ?: 0.0, stationsList[i]?.longitude ?: 0.0, result
-                        )
+                            stationsList[i]?.latitude ?: 0.0, stationsList[i]?.longitude ?: 0.0, result)
                         if (result[0].absoluteValue < 500) {
                             current_station_location_fam.visibility = View.VISIBLE
                             currentStationSp.visibility = View.GONE
@@ -221,7 +230,6 @@ class AddMinsFragment : Fragment() {
             }
         }
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
-
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -239,13 +247,6 @@ class AddMinsFragment : Fragment() {
             }
         }
     }
-
-    lateinit var stationsList: MutableMap<String, Location>
-    lateinit var sharedPreferences: SharedPreferences
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private val instance = FirebaseDatabase.getInstance()
-    private val totalWaitingPath = instance.getReference(FirebaseInfo.TOTAL_TIME_PATH)
-    private lateinit var locationCallback: LocationCallback
 
     companion object {
         @JvmStatic

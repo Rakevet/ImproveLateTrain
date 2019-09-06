@@ -35,7 +35,6 @@ class PicturesGalleryFragment : Fragment() {
             intent.type = "image/*"
             intent.action = Intent.ACTION_GET_CONTENT
             startActivityForResult(Intent.createChooser(intent, getString(R.string.upload_photo_gallery)), PICK_IMAGE)
-
         }
 
         var imageReferences: MutableList<StorageReference> = arrayListOf()

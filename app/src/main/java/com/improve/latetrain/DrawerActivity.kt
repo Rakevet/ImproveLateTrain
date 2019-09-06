@@ -24,10 +24,21 @@ import kotlinx.android.synthetic.main.content_drawer.*
 class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private val TAG = "DrawerActivity"
+    private var shareActionProvider: ShareActionProvider? = null
+    private lateinit var bottomNavView: BottomNavigationView
+    private var localFragmentManager = supportFragmentManager
+    private lateinit var sendIntent: Intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_drawer)
+
+        sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_SUBJECT, baseContext?.resources?.getString(R.string.app_name))
+            putExtra(Intent.EXTRA_TEXT, baseContext?.resources?.getString(R.string.share_app_url_drawer) + BuildConfig.APPLICATION_ID)
+            type = "text/plain"
+        }
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -122,15 +133,6 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    private val sendIntent: Intent = Intent().apply {
-        action = Intent.ACTION_SEND
-        putExtra(Intent.EXTRA_SUBJECT, baseContext?.resources?.getString(R.string.app_name))
-        putExtra(Intent.EXTRA_TEXT, baseContext?.resources?.getString(R.string.share_app_url_drawer) + BuildConfig.APPLICATION_ID)
-        type = "text/plain"
-    }
-    private var shareActionProvider: ShareActionProvider? = null
-    private lateinit var bottomNavView: BottomNavigationView
-    private var localFragmentManager = supportFragmentManager
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         bottomNavView.menu.setGroupCheckable(0, true, true)
         nav_view.menu.getItem(0).isChecked = true

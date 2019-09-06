@@ -125,4 +125,5 @@
     <string name="home_activity_drawer_drawer">מסך בית</string>
     <string name="about_activity_drawer_drawer">אודותינו</string>
     <string name="write_us_activity_drawer_drawer">כתבו לנו</string>
+    <string name="please_fill_requiered_information_addmins">נא למלא את המידע הנדרש!</string>
 </resources>
