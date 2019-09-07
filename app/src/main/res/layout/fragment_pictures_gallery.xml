@@ -1,0 +1,27 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@android:color/white"
+        tools:context="com.improve.latetrain.fragments.PicturesGalleryFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gallery_rv_fpg"
+            android:paddingTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+    />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/upload_fab_fpg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:src="@drawable/ic_photo_camera_black_24dp"
+            android:layout_marginBottom="16dp"
+            android:tooltipText="@string/help_prove_train_late"
+    />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
