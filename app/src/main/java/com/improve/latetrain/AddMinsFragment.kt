@@ -59,15 +59,8 @@ class AddMinsFragment : Fragment() {
         addMinBtn.setOnClickListener {
             val lastTime = sharedPreferences.getLong(LAST_CLICK, 0)
             Log.d(TAG, lastTime.toString())
-            var is30MinPass = true
             if (lastTime + 1800 > System.currentTimeMillis() / 1000) {
-                is30MinPass = false
-                val builder = AlertDialog.Builder(context)
-                builder.setTitle(getString(R.string.wait_addmins))
-                builder.setMessage(getString(R.string.once_in_30_addmins))
-                builder.setPositiveButton(getString(R.string.got_it_addmins)) { _, _ -> }
-                val dialog: AlertDialog = builder.create()
-                dialog.show()
+                displayTimeLimitForUpdateingDialog()
                 return@setOnClickListener
             }
 
@@ -82,15 +75,15 @@ class AddMinsFragment : Fragment() {
 
             if (!isInStation) {
                 val builder = AlertDialog.Builder(context)
-                builder.setTitle("אתה לא בתחנת רכבת!")
-                builder.setMessage("חייבים להיות בתוך תחנת רכבת בשביל לדווח!")
+                builder.setTitle(R.string.your_not_at_station)
+                builder.setMessage(R.string.complete_info_for_update)
                 builder.setPositiveButton(getString(R.string.got_it_addmins)) { _, _ -> }
                 val dialog: AlertDialog = builder.create()
                 dialog.show()
                 return@setOnClickListener
             }
 
-            if (minutes > 0 && isDestinationSelected && isInStation && is30MinPass && isNotSame) {
+            if (minutes > 0 && isDestinationSelected && isInStation && isNotSame) {
                 totalWaitingPath.runTransaction(object : Transaction.Handler {
                     override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {}
 
@@ -157,6 +150,15 @@ class AddMinsFragment : Fragment() {
         activity?.let {
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(it.baseContext)
         }
+    }
+
+    fun displayTimeLimitForUpdateingDialog(){
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(getString(R.string.wait_addmins))
+        builder.setMessage(getString(R.string.once_in_30_addmins))
+        builder.setPositiveButton(getString(R.string.got_it_addmins)) { _, _ -> }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
     private fun useLocationPermission() {
