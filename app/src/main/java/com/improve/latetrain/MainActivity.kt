@@ -7,6 +7,8 @@ import android.widget.TextView
 import com.google.firebase.database.FirebaseDatabase
 import com.improve.latetrain.R
 
+
+//random change for git check
 class MainActivity : AppCompatActivity() {
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
