@@ -4,7 +4,7 @@
         android:layout_width="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
         android:background="@android:color/white"
         android:layout_height="match_parent"
-        tools:context="com.improve.latetrain.ChatFragment">
+        tools:context="com.improve.latetrain.fragments.ChatFragment">
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv"

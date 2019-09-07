@@ -1,4 +1,4 @@
-package com.improve.latetrain
+package com.improve.latetrain.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -10,7 +10,6 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +23,9 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
+import com.improve.latetrain.FirebaseInfo
+import com.improve.latetrain.R
+import com.improve.latetrain.adapters.SpinnerAdapter
 import kotlinx.android.synthetic.main.fragment_add_mins.*
 import kotlin.math.absoluteValue
 
@@ -58,13 +60,16 @@ class AddMinsFragment : Fragment() {
 
         addMinBtn.setOnClickListener {
             val lastTime = sharedPreferences.getLong(LAST_CLICK, 0)
-            Log.d(TAG, lastTime.toString())
+            //if user has updated in past 30 mins
             if (lastTime + 1800 > System.currentTimeMillis() / 1000) {
-                displayTimeLimitForUpdateingDialog()
+                displayDissmissedDialog(getString(R.string.wait_addmins), getString(R.string.once_in_30_addmins), getString(
+                    R.string.got_it_addmins
+                ) )
                 return@setOnClickListener
             }
 
             var minutes = 0
+            //if user has selected minutes
             if (minLateEt.selectedItem.toString().isNotBlank()) {
                 minutes = minLateEt.selectedItem.toString().toInt()
             }
@@ -74,12 +79,9 @@ class AddMinsFragment : Fragment() {
             val isNotSame = destinationStationSp.selectedItem.toString() != current_station_location_fam.text.toString()
 
             if (!isInStation) {
-                val builder = AlertDialog.Builder(context)
-                builder.setTitle(R.string.your_not_at_station)
-                builder.setMessage(R.string.complete_info_for_update)
-                builder.setPositiveButton(getString(R.string.got_it_addmins)) { _, _ -> }
-                val dialog: AlertDialog = builder.create()
-                dialog.show()
+                displayDissmissedDialog(getString(R.string.your_not_at_station),
+                                        getString(R.string.complete_info_for_update),
+                                        getString(R.string.got_it_addmins) )
                 return@setOnClickListener
             }
 
@@ -99,11 +101,7 @@ class AddMinsFragment : Fragment() {
                     }
                 })
             } else {
-                Toast.makeText(
-                    context,
-                    getString(R.string.please_fill_requiered_information_addmins),
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context, getString(R.string.please_fill_requiered_information_addmins), Toast.LENGTH_SHORT).show()
             }
         }
         //Spinners
@@ -152,11 +150,11 @@ class AddMinsFragment : Fragment() {
         }
     }
 
-    fun displayTimeLimitForUpdateingDialog(){
+    fun displayDissmissedDialog(title: String, message: String, posBtnText: String){
         val builder = AlertDialog.Builder(context)
-        builder.setTitle(getString(R.string.wait_addmins))
-        builder.setMessage(getString(R.string.once_in_30_addmins))
-        builder.setPositiveButton(getString(R.string.got_it_addmins)) { _, _ -> }
+        builder.setTitle(title)
+        builder.setMessage(message)
+        builder.setPositiveButton(posBtnText) { _, _ -> }
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
@@ -239,7 +237,6 @@ class AddMinsFragment : Fragment() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        Log.d(TAG, "5")
         when (requestCode) {
             MY_PERMISSIONS_REQUEST_LOCATION -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

@@ -18,12 +18,13 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.improve.latetrain.fragments.*
 import kotlinx.android.synthetic.main.activity_drawer.*
 import kotlinx.android.synthetic.main.content_drawer.*
 
 class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private val TAG = "DrawerActivity"
+    private val TAG = "DrawerActivityTag"
     private var shareActionProvider: ShareActionProvider? = null
     private lateinit var bottomNavView: BottomNavigationView
     private var localFragmentManager = supportFragmentManager
@@ -34,7 +35,6 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         setContentView(R.layout.activity_drawer)
 
         //push check
-
         sendIntent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_SUBJECT, baseContext?.resources?.getString(R.string.app_name))
@@ -56,7 +56,7 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         navView.setNavigationItemSelectedListener(this)
 
         bottomNavView = bottom_nav_view
-        bottomNavView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        bottomNavView.setOnNavigationItemSelectedListener(onBottomNavigationItemSelectedListener)
         bottomNavView.selectedItemId = R.id.navigation_add_mins
 
         live_minutes.text = getString(R.string.no_internet_connection_drawer)
@@ -84,7 +84,6 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         menuInflater.inflate(R.menu.drawer, menu)
         shareActionProvider = ShareActionProvider(this)
         shareActionProvider?.setShareIntent(Intent.createChooser(sendIntent, getString(R.string.share_drawer)))
-        Log.d(TAG, "Menu has been created")
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -95,7 +94,6 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 return true
             }
             else -> {
-                Log.d(TAG, "Item in menu has been clicked!")
                 if (drawer_layout.isDrawerOpen(GravityCompat.START))
                     drawer_layout.closeDrawer(GravityCompat.START)
                 else
@@ -109,20 +107,18 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         topLayout.visibility = View.GONE
         nav_view.menu.setGroupCheckable(0, true, true)
         val fragment = when (item.itemId) {
-            R.id.nav_home -> AddMinsFragment.newInstance()
-            R.id.nav_about_us -> AboutUsFragment.newInstance()
-            else -> WriteUsFragment.newInstance()
-        }
-        when (item.itemId) {
             R.id.nav_home -> {
                 topLayout.visibility = View.VISIBLE
                 bottomNavView.menu.setGroupCheckable(0, true, true)
+                AddMinsFragment.newInstance()
             }
             R.id.nav_about_us -> {
                 bottomNavView.menu.setGroupCheckable(0, false, true)
+                AboutUsFragment.newInstance()
             }
             else -> {
                 bottomNavView.menu.setGroupCheckable(0, false, true)
+                WriteUsFragment.newInstance()
             }
         }
         localFragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit()
@@ -131,11 +127,7 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         return true
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
-    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+    private val onBottomNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         bottomNavView.menu.setGroupCheckable(0, true, true)
         nav_view.menu.getItem(0).isChecked = true
         topLayout.visibility = View.VISIBLE

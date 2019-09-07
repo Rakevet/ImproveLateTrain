@@ -1,4 +1,4 @@
-package com.improve.latetrain
+package com.improve.latetrain.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,6 +8,8 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.storage.StorageReference
+import com.improve.latetrain.GlideApp
+import com.improve.latetrain.R
 import kotlinx.android.synthetic.main.gallery_row_layout.view.*
 
 class GalleryAdapter(var list: MutableList<StorageReference>): RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {

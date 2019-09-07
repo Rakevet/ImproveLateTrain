@@ -1,4 +1,4 @@
-package com.improve.latetrain
+package com.improve.latetrain.fragments
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.snackbar.Snackbar
+import com.improve.latetrain.R
 import kotlinx.android.synthetic.main.fragment_write_us.*
 
 class WriteUsFragment : Fragment() {
@@ -46,6 +47,7 @@ class WriteUsFragment : Fragment() {
 
     companion object{
         @JvmStatic
-        fun newInstance(): WriteUsFragment = WriteUsFragment()
+        fun newInstance(): WriteUsFragment =
+            WriteUsFragment()
     }
 }

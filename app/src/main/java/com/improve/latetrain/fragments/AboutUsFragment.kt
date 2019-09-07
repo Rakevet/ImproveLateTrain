@@ -1,10 +1,11 @@
-package com.improve.latetrain
+package com.improve.latetrain.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.improve.latetrain.R
 
 class AboutUsFragment : Fragment() {
 
@@ -16,6 +17,7 @@ class AboutUsFragment : Fragment() {
 
     companion object{
         @JvmStatic
-        fun newInstance(): AboutUsFragment = AboutUsFragment()
+        fun newInstance(): AboutUsFragment =
+            AboutUsFragment()
     }
 }

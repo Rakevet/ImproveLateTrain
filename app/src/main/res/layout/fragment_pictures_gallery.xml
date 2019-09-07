@@ -4,7 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
         android:background="@android:color/white"
-        tools:context="com.improve.latetrain.PicturesGalleryFragment">
+        tools:context="com.improve.latetrain.fragments.PicturesGalleryFragment">
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/gallery_rv_fpg"

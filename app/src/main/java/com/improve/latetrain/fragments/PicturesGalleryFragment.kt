@@ -1,4 +1,4 @@
-package com.improve.latetrain
+package com.improve.latetrain.fragments
 
 import android.app.Activity
 import android.content.Intent
@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.improve.latetrain.adapters.GalleryAdapter
+import com.improve.latetrain.R
 import kotlinx.android.synthetic.main.fragment_pictures_gallery.*
 import java.util.*
 
@@ -69,6 +71,7 @@ class PicturesGalleryFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(): PicturesGalleryFragment = PicturesGalleryFragment()
+        fun newInstance(): PicturesGalleryFragment =
+            PicturesGalleryFragment()
     }
 }

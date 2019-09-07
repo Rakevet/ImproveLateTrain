@@ -1,10 +1,12 @@
-package com.improve.latetrain
+package com.improve.latetrain.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.improve.latetrain.Message
+import com.improve.latetrain.R
 import kotlinx.android.synthetic.main.message_layout_left.view.*
 
 class MessagesAdapter(private val uid: String) : RecyclerView.Adapter<MessagesAdapter.MessageViewHolder>(){
@@ -21,7 +23,7 @@ class MessagesAdapter(private val uid: String) : RecyclerView.Adapter<MessagesAd
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-        if (viewType==LayoutType.RIGHT_LAYOUT.type)
+        if (viewType== LayoutType.RIGHT_LAYOUT.type)
         {
             val v = LayoutInflater.from(parent.context).inflate(R.layout.message_layout_right, parent, false)
             return MessageViewHolder(v)
