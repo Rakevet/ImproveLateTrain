@@ -25,6 +25,8 @@ import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_add_mins.*
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.absoluteValue
 
 class AddMinsFragment : Fragment() {
@@ -38,6 +40,7 @@ class AddMinsFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val instance = FirebaseDatabase.getInstance()
     private val totalWaitingPath = instance.getReference(FirebaseInfo.TOTAL_TIME_PATH)
+    private val totalDaysPath = instance.getReference(FirebaseInfo.TOTAL_DAYS)
     private lateinit var locationCallback: LocationCallback
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
@@ -60,7 +63,7 @@ class AddMinsFragment : Fragment() {
             val lastTime = sharedPreferences.getLong(LAST_CLICK, 0)
             Log.d(TAG, lastTime.toString())
             var is30MinPass = true
-            if (lastTime + 1800 > System.currentTimeMillis() / 1000) {
+            if (lastTime + 1800 == System.currentTimeMillis() / 1000) {
                 is30MinPass = false
                 val builder = AlertDialog.Builder(context)
                 builder.setTitle(getString(R.string.wait_addmins))
@@ -92,11 +95,25 @@ class AddMinsFragment : Fragment() {
 
             if (minutes > 0 && isDestinationSelected && isInStation && is30MinPass && isNotSame) {
                 totalWaitingPath.runTransaction(object : Transaction.Handler {
-                    override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {}
+                    override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
+                        val currentDatePath = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+                        totalDaysPath.child(currentDatePath.toString()).child("minutes").runTransaction(object: Transaction.Handler{
+                            override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {}
+                            override fun doTransaction(p0: MutableData): Transaction.Result {
+                                if (p0.getValue(Int::class.java) == null) {
+                                    p0.value = minutes
+                                    return Transaction.success(p0)
+                                }
+                                val dayData = p0.getValue(Int::class.java)
+                                p0.value = dayData?.plus(minutes)
+                                return Transaction.success(p0)
+                            }
+                        })
+                    }
 
                     override fun doTransaction(mutableData: MutableData): Transaction.Result {
                         sharedPreferences.edit()?.putLong(LAST_CLICK, System.currentTimeMillis() / 1000)?.apply()
-                        if (mutableData.getValue(Int::class.java) == 0) {
+                        if (mutableData.getValue(Int::class.java) == null) {
                             mutableData.value = minutes
                             return Transaction.success(mutableData)
                         }

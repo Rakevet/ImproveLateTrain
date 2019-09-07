@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_chat.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ChatFragment : Fragment() {
 
@@ -23,7 +25,9 @@ class ChatFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val instance = FirebaseDatabase.getInstance()
-        val ref = instance.getReference("Messages/")
+        val currentDatePath = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+        val messagesPerDaysPath = instance.getReference(FirebaseInfo.TOTAL_DAYS)
+            .child(currentDatePath.toString()).child("messages")
 
         val uid = Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
 
@@ -47,13 +51,13 @@ class ChatFragment : Fragment() {
             }
             override fun onCancelled(databaseError: DatabaseError) {}
         }
-        ref.addChildEventListener(postListener)
+        messagesPerDaysPath.addChildEventListener(postListener)
         send_btn.setOnClickListener {
             if(write_et.text.toString().isNotBlank()){
                 val message = Message()
                 message.message = write_et.text.toString().trim()
                 message.uid = uid
-                ref.push().setValue(message)
+                messagesPerDaysPath.push().setValue(message)
                 write_et.text.clear()
             }
         }
