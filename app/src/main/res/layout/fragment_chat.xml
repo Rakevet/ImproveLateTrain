@@ -45,6 +45,7 @@
             android:background="@drawable/send_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
+            android:tooltipText="@string/take_out_frustration"
     />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

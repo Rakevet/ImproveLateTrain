@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.common.api.ResolvableApiException
@@ -51,6 +52,10 @@ class AddMinsFragment : Fragment() {
             sharedPreferences = it.getSharedPreferences("com.improve.latetrain", Context.MODE_PRIVATE)
         }
 
+        addPermission.setOnClickListener {
+            useLocationPermission()
+        }
+
         addMinBtn.setOnClickListener {
             val lastTime = sharedPreferences.getLong(LAST_CLICK, 0)
             Log.d(TAG, lastTime.toString())
@@ -71,18 +76,21 @@ class AddMinsFragment : Fragment() {
                 minutes = minLateEt.selectedItem.toString().toInt()
             }
             val isDestinationSelected: Boolean =
-                !(destinationStationSp.selectedItem.toString().contains(getString(R.string.where_are_you_going_addmins)))
-            var isCurrentStationSelected: Boolean =
-                !(currentStationSp.selectedItem.toString().contains(getString(R.string.wich_station_addmins)))
-            var isNotSame = !destinationStationSp.selectedItem.toString().equals(currentStationSp.selectedItem.toString())
+                destinationStationSp.selectedItem.toString() != destinationStationSp[0].toString()
+            val isInStation: Boolean = current_station_location_fam.text.toString()!=getString(R.string.not_in_train_station_addmins)
+            val isNotSame = destinationStationSp.selectedItem.toString() != current_station_location_fam.text.toString()
 
-            if (current_station_location_fam.visibility==View.VISIBLE) {
-                isNotSame = !destinationStationSp.selectedItem.toString()
-                        .equals(current_station_location_fam.text.toString())
-                isCurrentStationSelected = true
+            if (!isInStation) {
+                val builder = AlertDialog.Builder(context)
+                builder.setTitle("אתה לא בתחנת רכבת!")
+                builder.setMessage("חייבים להיות בתוך תחנת רכבת בשביל לדווח!")
+                builder.setPositiveButton(getString(R.string.got_it_addmins)) { _, _ -> }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
+                return@setOnClickListener
             }
 
-            if (minutes > 0 && isDestinationSelected && isCurrentStationSelected && is30MinPass && isNotSame) {
+            if (minutes > 0 && isDestinationSelected && isInStation && is30MinPass && isNotSame) {
                 totalWaitingPath.runTransaction(object : Transaction.Handler {
                     override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {}
 
@@ -98,20 +106,14 @@ class AddMinsFragment : Fragment() {
                     }
                 })
             } else {
-                Toast.makeText(context, getString(R.string.please_fill_requiered_information_addmins), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    getString(R.string.please_fill_requiered_information_addmins),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         //Spinners
-        val adapterCurrentLocations = SpinnerAdapter(
-            context ?: return,
-            R.layout.spinner_dropdown_layout,
-            resources.getStringArray(R.array.stations).toList()
-        )
-        val listOfStations = adapterCurrentLocations.items as ArrayList<String>
-        listOfStations[0] = getString(R.string.wich_station_addmins)
-        adapterCurrentLocations.items = listOfStations
-        currentStationSp.adapter = adapterCurrentLocations
-
         val adapterLocations = SpinnerAdapter(
             context ?: return,
             R.layout.spinner_dropdown_layout,
@@ -138,7 +140,8 @@ class AddMinsFragment : Fragment() {
         } catch (e: NoClassDefFoundError) {
         } catch (e: ClassCastException) {
         } catch (e: NoSuchFieldException) {
-        } catch (e: IllegalAccessException) { }
+        } catch (e: IllegalAccessException) {
+        }
 
         stationsList = mutableMapOf()
         val textStations = activity?.assets?.open("trainstationscoordinates.txt")?.bufferedReader()
@@ -156,22 +159,24 @@ class AddMinsFragment : Fragment() {
         }
     }
 
+    private fun useLocationPermission() {
+        activity?.let {
+            if (ContextCompat.checkSelfPermission(it.baseContext, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION),
+                    MY_PERMISSIONS_REQUEST_LOCATION)
+            } else
+                setLocationRequests()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
-        activity?.let {
-            if(sharedPreferences.getBoolean(IS_PERMISSION_REQUEST_GRANTED, true))
-            {
-                if (ContextCompat.checkSelfPermission(it.baseContext, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED)
-                {
-                    requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION),
-                        MY_PERMISSIONS_REQUEST_LOCATION)
-                }
-                else
-                    setLocationRequests()
-            }
-        }
+            if (sharedPreferences.getBoolean(IS_PERMISSION_REQUEST_GRANTED, true))
+                useLocationPermission()
     }
 
     override fun onPause() {
@@ -180,6 +185,7 @@ class AddMinsFragment : Fragment() {
     }
 
     private fun stopLocationUpdates() {
+        setLocationRequests()
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
@@ -191,15 +197,15 @@ class AddMinsFragment : Fragment() {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-        val client: SettingsClient = LocationServices.getSettingsClient(context?:return)
+        val client: SettingsClient = LocationServices.getSettingsClient(context ?: return)
         val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
         task.addOnSuccessListener {}
         task.addOnFailureListener { exception ->
             if (exception is ResolvableApiException) {
                 try {
                     exception.startResolutionForResult(activity, REQUEST_CHECK_SETTINGS)
+                } catch (sendEx: IntentSender.SendIntentException) {
                 }
-                catch (sendEx: IntentSender.SendIntentException) { }
             }
         }
 
@@ -212,19 +218,17 @@ class AddMinsFragment : Fragment() {
                     for (i in stationsList.keys) {
                         Location.distanceBetween(
                             lastLocationRecieved.latitude, lastLocationRecieved.longitude,
-                            stationsList[i]?.latitude ?: 0.0, stationsList[i]?.longitude ?: 0.0, result)
+                            stationsList[i]?.latitude ?: 0.0, stationsList[i]?.longitude ?: 0.0, result
+                        )
                         if (result[0].absoluteValue < 500) {
-                            current_station_location_fam.visibility = View.VISIBLE
-                            currentStationSp.visibility = View.GONE
-                            current_station_location_fam.text = i
+                            current_station_location_fam?.text = i
                             isInStation = true
+                            fusedLocationClient.removeLocationUpdates(this)
                             break
                         }
                     }
-                    if (!isInStation)
-                    {
-                        current_station_location_fam.visibility = View.GONE
-                        currentStationSp.visibility = View.VISIBLE
+                    if (!isInStation) {
+                        current_station_location_fam?.text = getString(R.string.not_in_train_station_addmins)
                     }
                 }
             }
@@ -234,16 +238,18 @@ class AddMinsFragment : Fragment() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         Log.d(TAG, "5")
-        when(requestCode)
-        {
+        when (requestCode) {
             MY_PERMISSIONS_REQUEST_LOCATION -> {
-                if (grantResults.isNotEmpty() && grantResults[0]==PackageManager.PERMISSION_GRANTED)
-                {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    addMinBtn.visibility = View.VISIBLE
+                    addPermission.visibility = View.GONE
                     setLocationRequests()
                     sharedPreferences.edit().putBoolean(IS_PERMISSION_REQUEST_GRANTED, true).apply()
-                }
-                else
+                } else {
+                    addMinBtn.visibility = View.GONE
+                    addPermission.visibility = View.VISIBLE
                     sharedPreferences.edit().putBoolean(IS_PERMISSION_REQUEST_GRANTED, false).apply()
+                }
             }
         }
     }
