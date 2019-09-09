@@ -64,4 +64,8 @@
     <string name="complain_bottom_nav">תלונות</string>
     <string name="help_prove_train_late">תעזרו לנו להוכיח שהרכבת מאחרת!</string>
     <string name="take_out_frustration">זה המקום להוציא את התיסכול ביחד!</string>
+    <string name="define_date_fh">הגדר תאריך</string>
+    <string name="history_bottom_nav">היסטוריה</string>
+    <string name="date_path">%1$d/%2$d/%3$d</string>
+
 </resources>

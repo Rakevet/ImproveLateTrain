@@ -4,7 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="#3880EC"
+        android:background="@color/colorPrimary"
         tools:context=".WriteUsFragment">
 
     <TextView
@@ -28,7 +28,7 @@
             android:layout_height="50dp"
             android:layout_margin="16dp"
             android:hint="@string/subject_write_us"
-            android:textColor="#e6a430"
+            android:textColor="@color/colorAccent"
             android:padding="8dp"
             android:background="@drawable/white_live_container"
             app:layout_constraintRight_toRightOf="parent"
@@ -44,7 +44,7 @@
             android:layout_margin="16dp"
             android:hint="@string/message_write_us"
             android:gravity="top"
-            android:textColor="#e6a430"
+            android:textColor="@color/colorAccent"
             android:padding="8dp"
             android:background="@drawable/white_live_container"
             app:layout_constraintBottom_toTopOf="@id/send_email_btn_fwu"

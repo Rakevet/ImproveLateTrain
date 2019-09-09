@@ -94,14 +94,21 @@ class AddMinsFragment : Fragment() {
             }
 
             if (minutes > 0 && isDestinationSelected && isInStation && is30MinPass && isNotSame) {
+                val currentDay = SimpleDateFormat("dd", Locale.getDefault()).format(Date()).toInt()
+                val currentMonth = SimpleDateFormat("MM", Locale.getDefault()).format(Date()).toInt()
+                val currentYear = SimpleDateFormat("yyyy", Locale.getDefault()).format(Date()).toInt()
+
                 totalWaitingPath.runTransaction(object : Transaction.Handler {
                     override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
-                        val currentDatePath = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
-                        totalDaysPath.child(currentDatePath.toString()).child("minutes").runTransaction(object: Transaction.Handler{
+                        totalDaysPath.child(currentYear.toString()).child(currentMonth.toString())
+                            .child(currentDay.toString()).child("minutes")
+                            .runTransaction(object: Transaction.Handler{
                             override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {}
                             override fun doTransaction(p0: MutableData): Transaction.Result {
                                 if (p0.getValue(Int::class.java) == null) {
                                     p0.value = minutes
+                                    totalDaysPath.child(currentYear.toString()).child(currentMonth.toString())
+                                        .child(currentDay.toString()).child("date").setValue(currentDay)
                                     return Transaction.success(p0)
                                 }
                                 val dayData = p0.getValue(Int::class.java)

@@ -25,9 +25,12 @@ class ChatFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val instance = FirebaseDatabase.getInstance()
-        val currentDatePath = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+        val currentDay = SimpleDateFormat("dd", Locale.getDefault()).format(Date()).toInt()
+        val currentMonth = SimpleDateFormat("MM", Locale.getDefault()).format(Date()).toInt()
+        val currentYear = SimpleDateFormat("yyyy", Locale.getDefault()).format(Date()).toInt()
         val messagesPerDaysPath = instance.getReference(FirebaseInfo.TOTAL_DAYS)
-            .child(currentDatePath.toString()).child("messages")
+            .child(currentYear.toString()).child(currentMonth.toString())
+            .child(currentDay.toString()).child("messages")
 
         val uid = Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
 
@@ -47,7 +50,7 @@ class ChatFragment : Fragment() {
                 message?.let{
                     adapter.list.add(message)
                 }
-                rv.scrollToPosition(adapter.list.size - 1)
+                rv?.scrollToPosition(adapter.list.size - 1)
             }
             override fun onCancelled(databaseError: DatabaseError) {}
         }

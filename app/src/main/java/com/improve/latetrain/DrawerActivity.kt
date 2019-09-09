@@ -33,8 +33,6 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_drawer)
 
-        //push check
-
         sendIntent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_SUBJECT, baseContext?.resources?.getString(R.string.app_name))
@@ -141,9 +139,10 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         topLayout.visibility = View.VISIBLE
         val fragment = when (item.itemId) {
             R.id.navigation_add_mins -> AddMinsFragment.newInstance()
-            R.id.navigation_history -> PicturesGalleryFragment.newInstance()
+            R.id.navigation_gallery -> PicturesGalleryFragment.newInstance()
             R.id.navigation_complaints -> ChatFragment.newInstance()
-            else -> ChatFragment.newInstance()
+            R.id.navigation_history -> HistoryFragment.newInstance()
+            else -> AddMinsFragment.newInstance()
         }
         localFragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit()
         true
