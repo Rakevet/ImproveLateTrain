@@ -35,6 +35,7 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         setContentView(R.layout.activity_drawer)
 
         //push check
+
         sendIntent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_SUBJECT, baseContext?.resources?.getString(R.string.app_name))
@@ -107,6 +108,11 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         topLayout.visibility = View.GONE
         nav_view.menu.setGroupCheckable(0, true, true)
         val fragment = when (item.itemId) {
+            R.id.nav_home -> AddMinsFragment.newInstance()
+            R.id.nav_about_us -> AboutUsFragment.newInstance()
+            else -> WriteUsFragment.newInstance()
+        }
+        when (item.itemId) {
             R.id.nav_home -> {
                 topLayout.visibility = View.VISIBLE
                 bottomNavView.menu.setGroupCheckable(0, true, true)
@@ -133,9 +139,10 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         topLayout.visibility = View.VISIBLE
         val fragment = when (item.itemId) {
             R.id.navigation_add_mins -> AddMinsFragment.newInstance()
-            R.id.navigation_history -> PicturesGalleryFragment.newInstance()
+            R.id.navigation_gallery -> PicturesGalleryFragment.newInstance()
             R.id.navigation_complaints -> ChatFragment.newInstance()
-            else -> ChatFragment.newInstance()
+            R.id.navigation_history -> HistoryFragment.newInstance()
+            else -> AddMinsFragment.newInstance()
         }
         localFragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit()
         true

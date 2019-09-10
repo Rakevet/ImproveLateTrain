@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,8 @@ import com.improve.latetrain.FirebaseInfo
 import com.improve.latetrain.R
 import com.improve.latetrain.adapters.SpinnerAdapter
 import kotlinx.android.synthetic.main.fragment_add_mins.*
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.math.absoluteValue
 
 class AddMinsFragment : Fragment() {
@@ -40,6 +43,7 @@ class AddMinsFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val instance = FirebaseDatabase.getInstance()
     private val totalWaitingPath = instance.getReference(FirebaseInfo.TOTAL_TIME_PATH)
+    private val totalDaysPath = instance.getReference(FirebaseInfo.TOTAL_DAYS)
     private lateinit var locationCallback: LocationCallback
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
@@ -60,16 +64,20 @@ class AddMinsFragment : Fragment() {
 
         addMinBtn.setOnClickListener {
             val lastTime = sharedPreferences.getLong(LAST_CLICK, 0)
-            //if user has updated in past 30 mins
-            if (lastTime + 1800 > System.currentTimeMillis() / 1000) {
-                displayDissmissedDialog(getString(R.string.wait_addmins), getString(R.string.once_in_30_addmins), getString(
-                    R.string.got_it_addmins
-                ) )
+            Log.d(TAG, lastTime.toString())
+            var is30MinPass = true
+            if (lastTime + 1800 == System.currentTimeMillis() / 1000) {
+                is30MinPass = false
+                val builder = AlertDialog.Builder(context)
+                builder.setTitle(getString(R.string.wait_addmins))
+                builder.setMessage(getString(R.string.once_in_30_addmins))
+                builder.setPositiveButton(getString(R.string.got_it_addmins)) { _, _ -> }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
                 return@setOnClickListener
             }
 
             var minutes = 0
-            //if user has selected minutes
             if (minLateEt.selectedItem.toString().isNotBlank()) {
                 minutes = minLateEt.selectedItem.toString().toInt()
             }
@@ -85,13 +93,34 @@ class AddMinsFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            if (minutes > 0 && isDestinationSelected && isInStation && isNotSame) {
+            if (minutes > 0 && isDestinationSelected && isInStation && is30MinPass && isNotSame) {
+                val currentDay = SimpleDateFormat("dd", Locale.getDefault()).format(Date()).toInt()
+                val currentMonth = SimpleDateFormat("MM", Locale.getDefault()).format(Date()).toInt()
+                val currentYear = SimpleDateFormat("yyyy", Locale.getDefault()).format(Date()).toInt()
+
                 totalWaitingPath.runTransaction(object : Transaction.Handler {
-                    override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {}
+                    override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
+                        totalDaysPath.child(currentYear.toString()).child(currentMonth.toString())
+                            .child(currentDay.toString()).child("minutes")
+                            .runTransaction(object: Transaction.Handler{
+                            override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {}
+                            override fun doTransaction(p0: MutableData): Transaction.Result {
+                                if (p0.getValue(Int::class.java) == null) {
+                                    p0.value = minutes
+                                    totalDaysPath.child(currentYear.toString()).child(currentMonth.toString())
+                                        .child(currentDay.toString()).child("date").setValue(currentDay)
+                                    return Transaction.success(p0)
+                                }
+                                val dayData = p0.getValue(Int::class.java)
+                                p0.value = dayData?.plus(minutes)
+                                return Transaction.success(p0)
+                            }
+                        })
+                    }
 
                     override fun doTransaction(mutableData: MutableData): Transaction.Result {
                         sharedPreferences.edit()?.putLong(LAST_CLICK, System.currentTimeMillis() / 1000)?.apply()
-                        if (mutableData.getValue(Int::class.java) == 0) {
+                        if (mutableData.getValue(Int::class.java) == null) {
                             mutableData.value = minutes
                             return Transaction.success(mutableData)
                         }
@@ -237,6 +266,7 @@ class AddMinsFragment : Fragment() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        Log.d(TAG, "5")
         when (requestCode) {
             MY_PERMISSIONS_REQUEST_LOCATION -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

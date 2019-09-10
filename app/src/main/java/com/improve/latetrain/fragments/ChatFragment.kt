@@ -13,6 +13,8 @@ import com.improve.latetrain.Message
 import com.improve.latetrain.adapters.MessagesAdapter
 import com.improve.latetrain.R
 import kotlinx.android.synthetic.main.fragment_chat.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ChatFragment : Fragment() {
 
@@ -26,7 +28,12 @@ class ChatFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val instance = FirebaseDatabase.getInstance()
-        val ref = instance.getReference("Messages/")
+        val currentDay = SimpleDateFormat("dd", Locale.getDefault()).format(Date()).toInt()
+        val currentMonth = SimpleDateFormat("MM", Locale.getDefault()).format(Date()).toInt()
+        val currentYear = SimpleDateFormat("yyyy", Locale.getDefault()).format(Date()).toInt()
+        val messagesPerDaysPath = instance.getReference(FirebaseInfo.TOTAL_DAYS)
+            .child(currentYear.toString()).child(currentMonth.toString())
+            .child(currentDay.toString()).child("messages")
 
         val uid = Settings.Secure.getString(activity?.contentResolver, Settings.Secure.ANDROID_ID)
 
@@ -46,17 +53,17 @@ class ChatFragment : Fragment() {
                 message?.let{
                     adapter.list.add(message)
                 }
-                rv.scrollToPosition(adapter.list.size - 1)
+                rv?.scrollToPosition(adapter.list.size - 1)
             }
             override fun onCancelled(databaseError: DatabaseError) {}
         }
-        ref.addChildEventListener(postListener)
+        messagesPerDaysPath.addChildEventListener(postListener)
         send_btn.setOnClickListener {
             if(write_et.text.toString().isNotBlank()){
                 val message = Message()
                 message.message = write_et.text.toString().trim()
                 message.uid = uid
-                ref.push().setValue(message)
+                messagesPerDaysPath.push().setValue(message)
                 write_et.text.clear()
             }
         }
