@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
+import com.improve.latetrain.FirebaseInfo
 import com.improve.latetrain.Message
 import com.improve.latetrain.adapters.MessagesAdapter
 import com.improve.latetrain.R
