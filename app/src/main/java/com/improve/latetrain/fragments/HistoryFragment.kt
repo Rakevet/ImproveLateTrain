@@ -1,4 +1,4 @@
-package com.improve.latetrain
+package com.improve.latetrain.fragments
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -12,6 +12,8 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.improve.latetrain.FirebaseInfo
+import com.improve.latetrain.R
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
 import kotlinx.android.synthetic.main.fragment_history.*
@@ -103,6 +105,7 @@ class HistoryFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(): HistoryFragment = HistoryFragment()
+        fun newInstance(): HistoryFragment =
+            HistoryFragment()
     }
 }

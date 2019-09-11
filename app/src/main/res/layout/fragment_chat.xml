@@ -35,15 +35,14 @@
             android:textColorHint="#F5D587"
             android:hint="@string/type_here_chat"
             android:fontFamily="@font/comixno2_medium"
-            tools:text="jhgjhgjhgjhgjhasidhaksjhdjashdkjhasdkjhaskjhdkjashdjhasdjhkasjdhajkshdkjashdkjashdjakshdkjahsdjashdkjhaskjdhaskjdhajkshdkjashdjkashdjkahsdkjasjdhajksdakjshdkjahsdjhaksjdhjkahsdjaskjhdjasjdhajshdjhasjdhkajhsdjkahsdkjahskjdhakjshdjahsd"
     />
     <ImageView
             android:id="@+id/send_btn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_margin="16dp"
             android:background="@drawable/send_shape"
-            android:src="@drawable/ic_arrow_toleft_white_32dp"
+            android:src="@drawable/ic_arrow_back_white_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             android:tooltipText="@string/take_out_frustration"
