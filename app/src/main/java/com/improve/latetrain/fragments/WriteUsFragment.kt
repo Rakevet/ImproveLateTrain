@@ -35,7 +35,7 @@ class WriteUsFragment : Fragment() {
     private fun sendEmail(view: View, email: String, subject: String, text: String){
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "message/rfc822"
-        intent.putExtra(Intent.EXTRA_EMAIL, email)
+        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
         intent.putExtra(Intent.EXTRA_SUBJECT, subject)
         intent.putExtra(Intent.EXTRA_TEXT, text)
         try {

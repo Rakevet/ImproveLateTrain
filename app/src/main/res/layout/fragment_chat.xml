@@ -35,7 +35,7 @@
             android:textColorHint="#F5D587"
             android:hint="@string/type_here_chat"
             android:fontFamily="@font/comixno2_medium"
-    />
+            android:inputType="text"/>
     <ImageView
             android:id="@+id/send_btn"
             android:layout_width="45dp"

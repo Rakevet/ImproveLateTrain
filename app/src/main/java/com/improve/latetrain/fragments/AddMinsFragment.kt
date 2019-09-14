@@ -45,6 +45,7 @@ class AddMinsFragment : Fragment() {
     private val totalWaitingPath = instance.getReference(FirebaseInfo.TOTAL_TIME_PATH)
     private val totalDaysPath = instance.getReference(FirebaseInfo.TOTAL_DAYS)
     private lateinit var locationCallback: LocationCallback
+    private lateinit var locationRequest: LocationRequest
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
             View? = inflater.inflate(R.layout.fragment_add_mins, container, false)
@@ -188,6 +189,32 @@ class AddMinsFragment : Fragment() {
         dialog.show()
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (sharedPreferences.getBoolean(IS_PERMISSION_REQUEST_GRANTED, true))
+            useLocationPermission()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity?.let {
+            if (ContextCompat.checkSelfPermission(it.baseContext, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+            ) {
+                fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null)
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        stopLocationUpdates()
+    }
+
+    private fun stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+
     private fun useLocationPermission() {
         activity?.let {
             if (ContextCompat.checkSelfPermission(it.baseContext, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -202,25 +229,9 @@ class AddMinsFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-            if (sharedPreferences.getBoolean(IS_PERMISSION_REQUEST_GRANTED, true))
-                useLocationPermission()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        stopLocationUpdates()
-    }
-
-    private fun stopLocationUpdates() {
-        setLocationRequests()
-        fusedLocationClient.removeLocationUpdates(locationCallback)
-    }
-
     @SuppressLint("MissingPermission")
     fun setLocationRequests() {
-        val locationRequest = LocationRequest.create().apply {
+        locationRequest = LocationRequest.create().apply {
             interval = 1000
             fastestInterval = 1000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
@@ -266,7 +277,6 @@ class AddMinsFragment : Fragment() {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        Log.d(TAG, "5")
         when (requestCode) {
             MY_PERMISSIONS_REQUEST_LOCATION -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

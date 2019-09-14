@@ -37,9 +37,9 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
         sendIntent = Intent().apply {
             action = Intent.ACTION_SEND
+            type = "text/plain"
             putExtra(Intent.EXTRA_SUBJECT, baseContext?.resources?.getString(R.string.app_name))
             putExtra(Intent.EXTRA_TEXT, baseContext?.resources?.getString(R.string.share_app_url_drawer) + BuildConfig.APPLICATION_ID)
-            type = "text/plain"
         }
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
