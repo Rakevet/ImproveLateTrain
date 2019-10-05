@@ -17,10 +17,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="kjasdfkjashdfkjhasdkjfhaskjdfhaskjdhf kjashdfkjashfkjahsdf skjdafhaskjdhfaksjdhf jksdahfsakjhfd"
-            android:background="@drawable/message_bg"
+            android:background="@drawable/message_bg_right"
             android:fontFamily="@font/comixno2_medium"
             android:textSize="20sp"
             android:textColor="@android:color/white"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp"
+            android:layout_marginTop="8dp"
     />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

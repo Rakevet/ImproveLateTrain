@@ -1,11 +1,13 @@
 package com.improve.latetrain.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.provider.Settings
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.*
@@ -66,8 +68,14 @@ class ChatFragment : Fragment() {
                 message.uid = uid
                 messagesPerDaysPath.push().setValue(message)
                 write_et.text.clear()
+                send_btn.hideKeyboard()
             }
         }
+    }
+
+    private fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
     }
 
     companion object {

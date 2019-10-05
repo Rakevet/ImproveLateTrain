@@ -2,14 +2,18 @@ package com.improve.latetrain.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.IntentSender
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.ResultReceiver
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -31,12 +35,14 @@ import kotlinx.android.synthetic.main.fragment_add_mins.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.absoluteValue
+import com.improve.latetrain.BuildConfig
+import com.improve.latetrain.LocationCheck
 
 class AddMinsFragment : Fragment() {
     private val TAG = "ADD_MIN_FRAG_TAG"
     private val LAST_CLICK = "LAST_CLICK"
-    private val REQUEST_CHECK_SETTINGS = 0x1
-    private val MY_PERMISSIONS_REQUEST_LOCATION = 0x2
+    private val REQUEST_CHECK_SETTINGS = 1
+    private val MY_PERMISSIONS_REQUEST_LOCATION = 2
     private val IS_PERMISSION_REQUEST_GRANTED = "IS_PERMISSION_REQUEST_GRANTED"
     lateinit var stationsList: MutableMap<String, Location>
     lateinit var sharedPreferences: SharedPreferences
@@ -66,9 +72,7 @@ class AddMinsFragment : Fragment() {
         addMinBtn.setOnClickListener {
             val lastTime = sharedPreferences.getLong(LAST_CLICK, 0)
             Log.d(TAG, lastTime.toString())
-            var is30MinPass = true
-            if (lastTime + 1800 == System.currentTimeMillis() / 1000) {
-                is30MinPass = false
+            if (lastTime + 1800 > System.currentTimeMillis() / 1000 && !BuildConfig.DEBUG) {
                 val builder = AlertDialog.Builder(context)
                 builder.setTitle(getString(R.string.wait_addmins))
                 builder.setMessage(getString(R.string.once_in_30_addmins))
@@ -84,17 +88,20 @@ class AddMinsFragment : Fragment() {
             }
             val isDestinationSelected: Boolean =
                 destinationStationSp.selectedItem.toString() != destinationStationSp[0].toString()
-            val isInStation: Boolean = current_station_location_fam.text.toString()!=getString(R.string.not_in_train_station_addmins)
+            val isInStation: Boolean =
+                current_station_location_fam.text.toString() != getString(R.string.not_in_train_station_addmins)
             val isNotSame = destinationStationSp.selectedItem.toString() != current_station_location_fam.text.toString()
 
             if (!isInStation) {
-                displayDissmissedDialog(getString(R.string.your_not_at_station),
-                                        getString(R.string.complete_info_for_update),
-                                        getString(R.string.got_it_addmins) )
+                displayDismissedDialog(
+                    getString(R.string.your_not_at_station),
+                    getString(R.string.complete_info_for_update),
+                    getString(R.string.got_it_addmins)
+                )
                 return@setOnClickListener
             }
 
-            if (minutes > 0 && isDestinationSelected && isInStation && is30MinPass && isNotSame) {
+            if (minutes > 0 && isDestinationSelected && isInStation && isNotSame) {
                 val currentDay = SimpleDateFormat("dd", Locale.getDefault()).format(Date()).toInt()
                 val currentMonth = SimpleDateFormat("MM", Locale.getDefault()).format(Date()).toInt()
                 val currentYear = SimpleDateFormat("yyyy", Locale.getDefault()).format(Date()).toInt()
@@ -103,20 +110,20 @@ class AddMinsFragment : Fragment() {
                     override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
                         totalDaysPath.child(currentYear.toString()).child(currentMonth.toString())
                             .child(currentDay.toString()).child("minutes")
-                            .runTransaction(object: Transaction.Handler{
-                            override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {}
-                            override fun doTransaction(p0: MutableData): Transaction.Result {
-                                if (p0.getValue(Int::class.java) == null) {
-                                    p0.value = minutes
-                                    totalDaysPath.child(currentYear.toString()).child(currentMonth.toString())
-                                        .child(currentDay.toString()).child("date").setValue(currentDay)
+                            .runTransaction(object : Transaction.Handler {
+                                override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {}
+                                override fun doTransaction(p0: MutableData): Transaction.Result {
+                                    if (p0.getValue(Int::class.java) == null) {
+                                        p0.value = minutes
+                                        totalDaysPath.child(currentYear.toString()).child(currentMonth.toString())
+                                            .child(currentDay.toString()).child("date").setValue(currentDay)
+                                        return Transaction.success(p0)
+                                    }
+                                    val dayData = p0.getValue(Int::class.java)
+                                    p0.value = dayData?.plus(minutes)
                                     return Transaction.success(p0)
                                 }
-                                val dayData = p0.getValue(Int::class.java)
-                                p0.value = dayData?.plus(minutes)
-                                return Transaction.success(p0)
-                            }
-                        })
+                            })
                     }
 
                     override fun doTransaction(mutableData: MutableData): Transaction.Result {
@@ -131,7 +138,11 @@ class AddMinsFragment : Fragment() {
                     }
                 })
             } else {
-                Toast.makeText(context, getString(R.string.please_fill_requiered_information_addmins), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    getString(R.string.please_fill_requiered_information_addmins),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         //Spinners
@@ -180,7 +191,7 @@ class AddMinsFragment : Fragment() {
         }
     }
 
-    fun displayDissmissedDialog(title: String, message: String, posBtnText: String){
+    private fun displayDismissedDialog(title: String, message: String, posBtnText: String) {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(title)
         builder.setMessage(message)
@@ -191,8 +202,10 @@ class AddMinsFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        if (sharedPreferences.getBoolean(IS_PERMISSION_REQUEST_GRANTED, true))
+        if (!sharedPreferences.getBoolean(IS_PERMISSION_REQUEST_GRANTED, false))
             useLocationPermission()
+        else
+            setLocationRequests()
     }
 
     override fun onResume() {
@@ -218,19 +231,33 @@ class AddMinsFragment : Fragment() {
     private fun useLocationPermission() {
         activity?.let {
             if (ContextCompat.checkSelfPermission(it.baseContext, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED
+            ) {
                 requestPermissions(
                     arrayOf(
                         Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION),
-                    MY_PERMISSIONS_REQUEST_LOCATION)
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ),
+                    MY_PERMISSIONS_REQUEST_LOCATION
+                )
             } else
                 setLocationRequests()
         }
     }
 
+    private fun isLocationOn(): Boolean {
+        val locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        var isGpsEnabled = false
+        try {
+            isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        } catch (ex: Exception) {
+        }
+        return isGpsEnabled
+    }
+
     @SuppressLint("MissingPermission")
     fun setLocationRequests() {
+        LocationCheck.isLocationRequestSet = true
         locationRequest = LocationRequest.create().apply {
             interval = 1000
             fastestInterval = 1000
@@ -243,7 +270,10 @@ class AddMinsFragment : Fragment() {
         task.addOnFailureListener { exception ->
             if (exception is ResolvableApiException) {
                 try {
-                    exception.startResolutionForResult(activity, REQUEST_CHECK_SETTINGS)
+                    if (!isLocationOn())
+                        startIntentSenderForResult(
+                            exception.resolution.intentSender, REQUEST_CHECK_SETTINGS,
+                            null, 0, 0, 0, null)
                 } catch (sendEx: IntentSender.SendIntentException) {
                 }
             }

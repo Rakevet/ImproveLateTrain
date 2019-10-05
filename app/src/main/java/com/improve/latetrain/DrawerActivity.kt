@@ -1,10 +1,12 @@
 package com.improve.latetrain
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ShareActionProvider
@@ -28,6 +30,7 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     private lateinit var bottomNavView: BottomNavigationView
     private var localFragmentManager = supportFragmentManager
     private lateinit var sendIntent: Intent
+    private var isLocationRequestSet: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -136,6 +139,7 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         bottomNavView.menu.setGroupCheckable(0, true, true)
         nav_view.menu.getItem(0).isChecked = true
         topLayout.visibility = View.VISIBLE
+        nav_view.hideKeyboard()
         val fragment = when (item.itemId) {
             R.id.navigation_add_mins -> AddMinsFragment.newInstance()
             R.id.navigation_gallery -> PicturesGalleryFragment.newInstance()
@@ -145,5 +149,10 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         }
         localFragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit()
         true
+    }
+
+    private fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
     }
 }

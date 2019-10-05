@@ -1,6 +1,6 @@
 package com.improve.latetrain
 
 object FirebaseInfo {
-    const val TOTAL_TIME_PATH = "totalMins"
+    val TOTAL_TIME_PATH : String = if (!BuildConfig.DEBUG)  "totalMins" else "debug_total_mins"
     const val TOTAL_DAYS = "totalDays"
 }

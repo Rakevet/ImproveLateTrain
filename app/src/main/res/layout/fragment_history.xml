@@ -21,7 +21,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintBottom_toTopOf="@id/graph_view_fh"
             android:text="@string/define_date_fh"
-            android:background="@drawable/message_bg"
+            android:background="@drawable/message_bg_left"
             android:textColor="@android:color/white"
             android:textSize="24sp"
     />
