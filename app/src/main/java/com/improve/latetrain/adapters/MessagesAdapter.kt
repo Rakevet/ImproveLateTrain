@@ -18,13 +18,17 @@ class MessagesAdapter(private val uid: String) : RecyclerView.Adapter<MessagesAd
         LEFT_LAYOUT(1)
     }
 
+    fun addMessage(message: Message){
+        this.list.add(message)
+        notifyItemInserted(list.lastIndex)
+    }
+
     override fun getItemViewType(position: Int): Int {
         return if (uid==list[position].uid)  LayoutType.RIGHT_LAYOUT.type else LayoutType.LEFT_LAYOUT.type
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-        if (viewType== LayoutType.RIGHT_LAYOUT.type)
-        {
+        if (viewType== LayoutType.RIGHT_LAYOUT.type) {
             val v = LayoutInflater.from(parent.context).inflate(R.layout.message_layout_right, parent, false)
             return MessageViewHolder(v)
         }

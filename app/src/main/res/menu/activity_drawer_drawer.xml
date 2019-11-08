@@ -16,6 +16,11 @@
                 android:id="@+id/nav_write_to_us"
                 android:icon="@drawable/ic_textsms_black_24dp"
                 android:title="@string/write_us_activity_drawer_drawer"/>
+        <item
+                android:id="@+id/menu_item_share"
+                android:icon="@drawable/ic_share_black_24dp"
+                android:title="@string/share_text_btn_drawer"
+                />
     </group>
 
 

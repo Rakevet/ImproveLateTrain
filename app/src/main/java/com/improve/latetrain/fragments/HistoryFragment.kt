@@ -12,6 +12,7 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.improve.latetrain.AnalyticsInfo
 import com.improve.latetrain.FirebaseInfo
 import com.improve.latetrain.R
 import com.jjoe64.graphview.series.BarGraphSeries
@@ -44,6 +45,9 @@ class HistoryFragment : Fragment() {
             context?.let {
                 datePickerDialog(it).show()
             }
+            context?.let{
+                AnalyticsInfo.sendAnalytics("chooseDateBtn", arrayListOf(Pair("", "")), it)
+            }
         }
     }
 
@@ -55,8 +59,8 @@ class HistoryFragment : Fragment() {
         val selectedDaySeries = BarGraphSeries(arrayOf())
         selectedDaySeries.color = Color.parseColor("#e6a430")
         graph_view_fh.viewport.isXAxisBoundsManual = true
-        var max = 0
-        var min = 0
+        graph_view_fh?.viewport?.setMaxX(31.0)
+        graph_view_fh?.viewport?.setMinX(0.0)
         postListener = object : ChildEventListener {
             override fun onChildMoved(p0: DataSnapshot, p1: String?) {}
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {}
@@ -65,20 +69,12 @@ class HistoryFragment : Fragment() {
                 val minutes = dataSnapshot.child("minutes").getValue(Int::class.java)
                 val day = dataSnapshot.child("date").getValue(Int::class.java)
                 day?.let {
-                    if (it > max)
-                        max = it
-                    if (min > it)
-                        min = it
                     if (day==currentDay) {
-                        selectedDaySeries.appendData(DataPoint(it.toDouble(), minutes?.toDouble() ?: return), true, max, true)
-                        graph_view_fh?.viewport?.setMaxX(max.toDouble())
-                        graph_view_fh?.viewport?.setMinX(min.toDouble())
+                        selectedDaySeries.appendData(DataPoint(it.toDouble(), minutes?.toDouble() ?: return), true, 31, true)
                         graph_view_fh?.addSeries(selectedDaySeries)
                     }
                     else {
-                        series.appendData(DataPoint(it.toDouble(), minutes?.toDouble() ?: return), true, max, true)
-                        graph_view_fh?.viewport?.setMaxX(max.toDouble())
-                        graph_view_fh?.viewport?.setMinX(min.toDouble())
+                        series.appendData(DataPoint(it.toDouble(), minutes?.toDouble() ?: return), true, 31, true)
                         graph_view_fh?.addSeries(series)
                     }
                 }

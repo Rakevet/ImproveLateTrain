@@ -1,18 +1,43 @@
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:background="@android:color/white"
         tools:context="com.improve.latetrain.fragments.PicturesGalleryFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/gallery_rv_fpg"
-            android:paddingTop="8dp"
+    <com.google.android.material.appbar.AppBarLayout
+            app:elevation="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                    app:layout_scrollFlags="scroll|enterAlways"
+                    android:id="@+id/gallery_live_bar"
+                    layout="@layout/live_bar_layout"
+                    />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-    />
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gallery_rv_fpg"
+                android:paddingTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+    </androidx.core.widget.NestedScrollView>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_gravity="bottom|center_horizontal"
             android:id="@+id/upload_fab_fpg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -24,4 +49,16 @@
             android:tooltipText="@string/help_prove_train_late"
     />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ProgressBar
+            android:id="@+id/image_upload_loading_pb"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:padding="8dp"
+            android:visibility="invisible"
+            android:theme="@style/AppTheme.WhiteAccent"
+            android:background="@drawable/progress_bg"
+            />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

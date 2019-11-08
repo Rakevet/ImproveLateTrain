@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="200dp" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto"
         android:background="@color/colorPrimary"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -10,18 +10,18 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:gravity="bottom">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/icon_image_nhd"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/ic_launcher"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"
     />
 
-
     <TextView
+            android:id="@+id/title_tv"
             app:layout_constraintTop_toBottomOf="@id/icon_image_nhd"
             app:layout_constraintRight_toRightOf="@id/icon_image_nhd"
             app:layout_constraintLeft_toLeftOf="@id/icon_image_nhd"
@@ -31,7 +31,19 @@
             android:textStyle="bold"
             android:text="@string/app_name"
             android:textColor="@android:color/white"
+            android:fontFamily="@font/comixno2_medium"
             android:textSize="24sp"/>
 
+    <TextView
+            app:layout_constraintTop_toBottomOf="@id/title_tv"
+            app:layout_constraintRight_toRightOf="@id/icon_image_nhd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/nav_header_vertical_spacing"
+            android:textStyle="bold"
+            android:text="@string/app_subtitle"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/comixno2_medium"
+            android:textSize="20sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

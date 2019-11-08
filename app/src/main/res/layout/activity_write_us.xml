@@ -4,24 +4,34 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:background="@color/colorPrimary"
-        tools:context=".fragments.WriteUsFragment">
+        android:background="#FFFFFF"
+        tools:context=".WriteUsActivity">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_awu"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            app:titleTextColor="@android:color/white"
+            android:layoutDirection="rtl"
+            app:layout_constraintTop_toTopOf="parent"
+            android:theme="@style/AppBarOverlay"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <TextView
             android:layout_marginTop="8dp"
             android:id="@+id/stay_in_touch_tv_fwu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_awu"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             android:text="@string/stay_in_touch_write_us"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorPrimary"
             android:textSize="40sp"
             android:fontFamily="@font/comixno2_medium"
-    />
-
-
+            />
     <EditText
             android:id="@+id/your_subject_et_fwu"
             android:layout_width="0dp"
@@ -36,7 +46,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             android:textSize="24sp"
             android:fontFamily="@font/comixno2_medium"
-    />
+            />
     <EditText
             android:id="@+id/text_body_et_fwu"
             android:layout_width="0dp"
@@ -53,8 +63,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             android:textSize="24sp"
             android:fontFamily="@font/comixno2_medium"
-
-    />
+            />
     <Button
             android:id="@+id/send_email_btn_fwu"
             android:layout_width="match_parent"
@@ -66,7 +75,7 @@
             android:textSize="28sp"
             android:fontFamily="@font/comixno2_bold"
             android:background="@drawable/message_bg_orange"
-    />
+            />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

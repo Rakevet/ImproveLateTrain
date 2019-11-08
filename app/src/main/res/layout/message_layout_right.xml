@@ -19,13 +19,16 @@
             tools:text="kjasdfkjashdfkjhasdkjfhaskjdfhaskjdhf kjashdfkjashfkjahsdf skjdafhaskjdhfaksjdhf jksdahfsakjhfd"
             android:background="@drawable/message_bg_right"
             android:fontFamily="@font/comixno2_medium"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="@android:color/white"
             android:paddingEnd="16dp"
             android:paddingStart="16dp"
             android:paddingTop="8dp"
             android:paddingBottom="4dp"
             android:layout_marginTop="8dp"
+            android:textIsSelectable="true"
+            android:autoLink="web"
+            android:theme="@style/AppTheme.WhiteAccent"
     />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

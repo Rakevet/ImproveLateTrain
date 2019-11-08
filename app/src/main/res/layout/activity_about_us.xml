@@ -5,20 +5,31 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
-        tools:context=".fragments.AboutUsFragment">
+        android:background="#FFFFFF"
+        tools:context=".AboutUsActivity">
 
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_aau"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            app:titleTextColor="@android:color/white"
+            android:layoutDirection="rtl"
+            app:layout_constraintTop_toTopOf="parent"
+            android:theme="@style/AppBarOverlay"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <TextView
             android:id="@+id/headline_tv_fau"
             android:layout_marginTop="16dp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_aau"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorPrimary"
             android:textSize="64sp"
             android:fontFamily="@font/comixno2_medium"
             android:text="@string/app_name"/>
@@ -34,9 +45,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorPrimary"
             android:textSize="30sp"
             android:text="@string/make_change_about_us"/>
+
+    <Button
+            android:id="@+id/licenses_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/main_text_tv_fau"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/programmers_text_tv_fau"
+            android:text="@string/licenses_about_us_btn"
+            android:background="@color/colorPrimary"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/comixno2_medium"
+            android:textSize="20sp"/>
 
     <TextView
             android:id="@+id/programmers_text_tv_fau"
@@ -48,7 +73,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorPrimary"
             android:textSize="32sp"
             android:text="@string/developers_about_us"/>
     <de.hdodenhof.circleimageview.CircleImageView
@@ -59,22 +84,20 @@
             app:layout_constraintLeft_toRightOf="@id/chani_profile_fau"
             app:layout_constraintBottom_toTopOf="@id/yishai_profile_text_fau"
             android:src="@drawable/yishai_profile"
-            app:civ_border_color="@android:color/white"
+            app:civ_border_color="@color/colorPrimary"
             app:civ_border_width="2dp"
             android:layout_marginBottom="16dp"
-    />
-    <de.hdodenhof.circleimageview.CircleImageView
+            />
+    <ImageView
             android:id="@+id/chani_profile_fau"
             android:layout_width="120dp"
             android:layout_height="120dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/yishai_profile_fau"
             app:layout_constraintBottom_toTopOf="@+id/chani_profile_text_fau"
-            android:src="@drawable/chani_profile"
+            android:src="@drawable/default_profile"
             android:layout_marginBottom="16dp"
-            app:civ_border_width="2dp"
-            app:civ_border_color="@android:color/white"
-    />
+            />
     <TextView
             android:id="@+id/yishai_profile_text_fau"
             app:layout_constraintLeft_toLeftOf="@id/yishai_profile_fau"
@@ -82,7 +105,7 @@
             app:layout_constraintBottom_toTopOf="@id/version_tv_fau"
             android:text="@string/yishai_greenberg"
             android:fontFamily="@font/comixno2_medium"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorPrimary"
             android:textSize="24sp"
             android:layout_margin="8dp"
             android:layout_width="wrap_content"
@@ -94,7 +117,7 @@
             app:layout_constraintBottom_toTopOf="@id/version_tv_fau"
             android:text="@string/shani_shulman"
             android:fontFamily="@font/comixno2_medium"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorPrimary"
             android:textSize="24sp"
             android:layout_margin="8dp"
             android:layout_width="wrap_content"
@@ -111,7 +134,7 @@
             android:textSize="20sp"
             android:textColor="#9ABAF7"
             android:layout_margin="16dp"
-    />
+            />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

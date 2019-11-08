@@ -37,7 +37,6 @@
     <string name="send_email_write_us">שלחו אימייל…</string>
     <string name="no_email_app_exist_write_us">אין לך אפליקציה ששולחת אימייל על הפלאפון!</string>
     <string name="live_stream_content">שידור חי</string>
-    <string name="train_waiting_time_content">כמות הדקות שרכבת ישראל עיכבה אותנו</string>
     <string name="app_name_with_space">Late Train</string>
     <string name="make_change_about_us">בואו נעשה שינוי יחד ונגרום לרכבת להפסיק לאחר!</string>
     <string name="developers_about_us">מפתחים:</string>
@@ -52,7 +51,7 @@
     <string name="send_email_btn_write_us">שלחו אימייל</string>
     <string name="subject_write_us">נושא:</string>
     <string name="stay_in_touch_write_us">צרו קשר!</string>
-    <string name="share_text_btn_drawer">Share</string>
+    <string name="share_text_btn_drawer">שתפו!</string>
     <string name="home_activity_drawer_drawer">מסך בית</string>
     <string name="about_activity_drawer_drawer">אודותינו</string>
     <string name="write_us_activity_drawer_drawer">כתבו לנו</string>
@@ -66,8 +65,24 @@
     <string name="take_out_frustration">זה המקום להוציא את התיסכול ביחד!</string>
     <string name="your_not_at_station">אתה לא בתחנת רכבת!</string>
     <string name="complete_info_for_update">חייבים להיות בתוך תחנת רכבת בשביל לדווח!</string>
-    <string name="define_date_fh">הגדר תאריך</string>
+    <string name="define_date_fh">בחרו תאריך</string>
     <string name="history_bottom_nav">היסטוריה</string>
     <string name="date_path">%1$d/%2$d/%3$d</string>
+    <string name="about_us_name">אודותינו</string>
+    <string name="write_us_name">כתבו לנו</string>
+    <string name="app_subtitle">הופכים את הרקבת לרכבת</string>
+    <string name="image_uploaded_message">התמונה הועלתה וממתינה לאישור</string>
+    <string name="waiting_message_addmins">תוכלו לדווח שוב בעוד 30 דקות</string>
+    <string name="thanks_he">תודה!</string>
+    <string name="remaining_time_add_mins">תוכלו לדווח שוב בעוד %1$d דקות</string>
+    <string name="approve_delete_pic">לאשר או למחוק</string>
+    <string name="approve_delete_pic_message">האם תרצו לאשר את התמונה או למחוק אותה?</string>
+    <string name="approve_pic">מאשר</string>
+    <string name="delete_pic">מחק</string>
+    <string name="train_waiting_money_content">הערכת שווי הדקות בשקלים</string>
+    <string name="train_waiting_time_content">כמות הדקות שהרכבת עיכבה אותנו</string>
+    <string name="licenses_about_us_btn">רשיונות</string>
+    <string name="minutes_he">דקות</string>
+    <string name="nis_he">שקל ₪</string>
 
 </resources>

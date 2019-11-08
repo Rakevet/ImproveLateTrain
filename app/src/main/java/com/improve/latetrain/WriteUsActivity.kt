@@ -1,26 +1,21 @@
-package com.improve.latetrain.fragments
+package com.improve.latetrain
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.google.android.material.snackbar.Snackbar
-import com.improve.latetrain.R
-import kotlinx.android.synthetic.main.fragment_write_us.*
+import kotlinx.android.synthetic.main.activity_write_us.*
 
-class WriteUsFragment : Fragment() {
+class WriteUsActivity : AppCompatActivity() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_write_us, container, false)
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_write_us)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+        setSupportActionBar(toolbar_awu)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         send_email_btn_fwu.setOnClickListener {
             val email = getString(R.string.app_email)
@@ -30,6 +25,11 @@ class WriteUsFragment : Fragment() {
                 Snackbar.make(send_email_btn_fwu, getString(R.string.please_fill_all_fields_write_us), Snackbar.LENGTH_LONG).show()
             else sendEmail(send_email_btn_fwu, email, subject, text)
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity(Intent(this, DrawerActivity::class.java))
     }
 
     private fun sendEmail(view: View, email: String, subject: String, text: String){
@@ -43,11 +43,5 @@ class WriteUsFragment : Fragment() {
         } catch (e: ActivityNotFoundException){
             Snackbar.make(view, getString(R.string.no_email_app_exist_write_us), Snackbar.LENGTH_LONG).show()
         }
-    }
-
-    companion object{
-        @JvmStatic
-        fun newInstance(): WriteUsFragment =
-            WriteUsFragment()
     }
 }

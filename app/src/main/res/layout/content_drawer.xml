@@ -1,93 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/content_drawer_constraint"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:showIn="@layout/app_bar_drawer"
-        tools:context=".DrawerActivity">
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/topLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:visibility="visible"
-            android:background="@drawable/live_container"
-    >
-        <TextView
-                android:id="@+id/live_text_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@id/topLayout"
-                app:layout_constraintRight_toRightOf="@id/topLayout"
-                app:layout_constraintLeft_toLeftOf="@id/topLayout"
-                android:text="@string/live_stream_content"
-                android:background="@drawable/white_live_container"
-                android:layout_margin="8dp"
-                android:textSize="16sp"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
-                android:textColor="#033675"
-                android:fontFamily="@font/comixno2_bold"
-        />
-        <TextView
-                android:id="@+id/textlivebar_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/live_text_tv"
-                app:layout_constraintRight_toRightOf="@id/topLayout"
-                app:layout_constraintLeft_toLeftOf="@id/topLayout"
-                android:textColor="@android:color/white"
-                android:text="@string/train_waiting_time_content"
-                android:fontFamily="@font/comixno2_medium"
-                android:textSize="19sp"
-                android:layout_margin="10dp"
-        />
-        <TextView
-                android:id="@+id/live_minutes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/textlivebar_tv"
-                app:layout_constraintRight_toLeftOf="@+id/topLayout"
-                app:layout_constraintLeft_toRightOf="@+id/topLayout"
-                tools:text="5000"
-                android:textSize="30sp"
-                android:fontFamily="@font/comixno2_medium"
-                android:textColor="#f9c871"
-        />
+        tools:context=".DrawerActivity"
+        tools:showIn="@layout/app_bar_drawer">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <include
+            android:id="@+id/live_bar"
+            layout="@layout/live_bar_layout"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            />
 
     <FrameLayout
-            android:layout_width="0dp" android:layout_height="0dp"
             android:id="@+id/fragmentContainer"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/bottom_nav_view"
-            app:layout_constraintTop_toBottomOf="@id/topLayout"
-    />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/live_bar" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_nav_view"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="0dp"
+            android:layout_gravity="bottom"
             android:layout_marginStart="0dp"
-            android:visibility="visible"
+            android:layout_marginEnd="0dp"
             android:background="?android:attr/windowBackground"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:menu="@menu/bottom_nav_menu"/>
-
+            app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
