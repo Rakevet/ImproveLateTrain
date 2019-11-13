@@ -39,7 +39,7 @@ import java.util.*
 import kotlin.math.absoluteValue
 
 class AddMinsFragment : Fragment() {
-    private val TAG = "ADD_MIN_FRAG_TAG"
+
     private val LAST_CLICK = "LAST_CLICK"
     private val REQUEST_CHECK_SETTINGS = 1
     private val MY_PERMISSIONS_REQUEST_LOCATION = 2
@@ -62,7 +62,7 @@ class AddMinsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         activity?.let {
-            sharedPreferences = it.getSharedPreferences("com.improve.latetrain", Context.MODE_PRIVATE)
+            sharedPreferences = it.getSharedPreferences(getString(R.string.app_path), Context.MODE_PRIVATE)
             firebaseAnalytics = FirebaseAnalytics.getInstance(it.baseContext)
         }
         lastTime = sharedPreferences.getLong(LAST_CLICK, 0)
@@ -170,7 +170,7 @@ class AddMinsFragment : Fragment() {
                 ).show()
             }
         }
-        //Spinners
+
         val adapterLocations = SpinnerAdapter(
             context ?: return,
             R.layout.spinner_dropdown_layout,
@@ -347,7 +347,6 @@ class AddMinsFragment : Fragment() {
             }
         }
     }
-
 
     companion object {
         @JvmStatic

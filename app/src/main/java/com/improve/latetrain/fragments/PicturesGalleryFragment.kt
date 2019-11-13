@@ -83,7 +83,7 @@ class PicturesGalleryFragment : Fragment() {
                 photoRef = task.result?.storage?.name
                 ref.downloadUrl
             }.addOnSuccessListener {
-                firestoreDB.collection("waiting_images").add(hashMapOf("link" to it.toString(), "ref" to photoRef))
+                firestoreDB.collection(FirebaseInfo.IMAGES_WAITING_REF).add(hashMapOf("link" to it.toString(), "ref" to photoRef))
                     .addOnSuccessListener {
                         image_upload_loading_pb.visibility = View.INVISIBLE
                         upload_fab_fpg.show()

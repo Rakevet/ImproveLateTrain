@@ -1,18 +1,15 @@
 package com.improve.latetrain
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.Switch
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ShareActionProvider
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -26,6 +23,7 @@ import com.improve.latetrain.fragments.ChatFragment
 import com.improve.latetrain.fragments.HistoryFragment
 import com.improve.latetrain.fragments.PicturesGalleryFragment
 import kotlinx.android.synthetic.main.activity_drawer.*
+import kotlinx.android.synthetic.main.app_bar_drawer.*
 import kotlinx.android.synthetic.main.content_drawer.*
 import kotlinx.android.synthetic.main.live_bar_layout.*
 import java.math.RoundingMode
@@ -55,7 +53,6 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 baseContext?.resources?.getString(R.string.share_app_url_drawer) + BuildConfig.APPLICATION_ID)
         }
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -150,32 +147,17 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        topLayout.visibility = View.GONE
-        nav_view.menu.setGroupCheckable(0, true, true)
         val intent  = when (item.itemId) {
             R.id.nav_home -> Intent(this, DrawerActivity::class.java)
             R.id.nav_about_us -> Intent(this, AboutUsActivity::class.java)
             R.id.nav_write_to_us -> Intent(this, WriteUsActivity::class.java)
             else -> null
         }
-        when (item.itemId) {
-            R.id.nav_home -> {
-                topLayout.visibility = View.VISIBLE
-                bottomNavView.menu.setGroupCheckable(0, true, true)
-            }
-            R.id.nav_about_us -> {
-                bottomNavView.menu.setGroupCheckable(0, false, true)
-            }
-            R.id.menu_item_share -> {
-                startActivity(Intent.createChooser(sendIntent, getString(R.string.share_drawer)))
-            }
-            else -> {
-                bottomNavView.menu.setGroupCheckable(0, false, true)
-            }
-        }
         drawer_layout.closeDrawer(GravityCompat.START)
         if(intent!=null)
             startActivity(intent)
+        else
+            startActivity(Intent.createChooser(sendIntent, getString(R.string.share_drawer)))
         return true
     }
 
@@ -183,10 +165,6 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             minutes_nis_switch.isChecked = isSwithChecked
             changeLiveContent(minutes_nis_switch, live_minutes, textlivebar_tv)
-            bottomNavView.menu.setGroupCheckable(0, true, true)
-            nav_view.menu.getItem(0).isChecked = true
-            topLayout.visibility = View.VISIBLE
-            nav_view.hideKeyboard()
             live_bar.visibility = View.VISIBLE
             val fragment = when (item.itemId) {
                 R.id.navigation_add_mins -> AddMinsFragment.newInstance()
@@ -201,9 +179,4 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             localFragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit()
             true
         }
-
-    private fun View.hideKeyboard() {
-        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(windowToken, 0)
-    }
 }

@@ -11,10 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.improve.latetrain.BuildConfig
-import com.improve.latetrain.GlideApp
-import com.improve.latetrain.ImageFirestore
-import com.improve.latetrain.R
+import com.improve.latetrain.*
 import kotlinx.android.synthetic.main.gallery_row_layout.view.*
 
 class GalleryAdapter(var list: MutableList<ImageFirestore>): RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
@@ -53,7 +50,7 @@ class GalleryAdapter(var list: MutableList<ImageFirestore>): RecyclerView.Adapte
 
     fun delete(position: Int){
         val database = FirebaseFirestore.getInstance()
-        database.collection("waiting_images").document(list[position].id)
+        database.collection(FirebaseInfo.IMAGES_WAITING_REF).document(list[position].id)
             .delete()
             .addOnSuccessListener {}
         list.removeAt(position)
@@ -73,7 +70,7 @@ class GalleryAdapter(var list: MutableList<ImageFirestore>): RecyclerView.Adapte
                     builder.setMessage(context.getString(R.string.approve_delete_pic_message))
                     builder.setPositiveButton(context.getString(R.string.approve_pic)){ dialog, _ ->
                         val database = FirebaseFirestore.getInstance()
-                        database.collection("approved_images")
+                        database.collection(FirebaseInfo.IMAGES_APPROVED_REF)
                             .add(hashMapOf("link" to list[position].content["link"].toString(),
                                             "ref" to list[position].content["ref"].toString()))
                         delete(position)

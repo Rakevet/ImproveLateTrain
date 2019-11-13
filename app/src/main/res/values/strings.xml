@@ -153,4 +153,7 @@
     <string name="licenses_about_us_btn">רשיונות</string>
     <string name="minutes_he">דקות</string>
     <string name="nis_he">שקל ₪</string>
+    <string name="app_path">com.improve.latetrain</string>
+    <string name="to_info">to info</string>
+    <string name="send_minutes_waited">send_minutes_waited</string>
 </resources>

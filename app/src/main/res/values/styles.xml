@@ -19,5 +19,14 @@
         <item name="colorAccent">@android:color/white</item> <!-- Whatever color you want-->
     </style>
 
+    <style name="NoStyle">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">#FFFFFF</item>
+        <item name="android:color">#FFFFFF</item>
+        <item name="android:colorAccent">#FFFFFF</item>
+        <item name="android:colorPrimary">#FFFFFF</item>
+        <item name="android:colorPrimaryDark">#FFFFFF</item>
+    </style>
 
 </resources>

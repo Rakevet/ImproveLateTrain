@@ -16,7 +16,6 @@
         <activity
                 android:label="@string/write_us_name"
                 android:parentActivityName=".DrawerActivity"
-                android:windowSoftInputMode="adjustPan"
                 android:screenOrientation="portrait"
                 android:name=".WriteUsActivity"
                 android:theme="@style/AppTheme.NoActionBar">
@@ -27,7 +26,6 @@
         <activity
                 android:label="@string/about_us_name"
                 android:parentActivityName=".DrawerActivity"
-                android:windowSoftInputMode="adjustPan"
                 android:screenOrientation="portrait"
                 android:name=".AboutUsActivity"
                 android:theme="@style/AppTheme.NoActionBar">
@@ -41,7 +39,7 @@
                 android:parentActivityName=".DrawerActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar"
-                android:windowSoftInputMode="adjustPan">
+                android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />

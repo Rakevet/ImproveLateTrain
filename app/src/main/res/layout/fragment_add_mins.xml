@@ -4,6 +4,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
+        android:fillViewport="true"
         tools:context="com.improve.latetrain.fragments.AddMinsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -11,14 +12,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white">
-
-
-        <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/top_guideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.08" />
 
         <View
                 android:layout_width="0dp"
@@ -44,7 +37,7 @@
                 android:textColor="@color/colorAccent"
                 android:textSize="20sp"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/top_guideline" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         <View
                 android:layout_width="0dp"
@@ -202,7 +195,8 @@
                 app:layout_constraintBottom_toBottomOf="@id/animation_layout"
                 app:layout_constraintLeft_toLeftOf="@id/animation_layout"
                 app:layout_constraintRight_toRightOf="@id/animation_layout"
-                app:layout_constraintTop_toTopOf="@id/animation_layout" />
+                app:layout_constraintTop_toTopOf="@id/animation_layout"
+                android:contentDescription="@string/send_minutes_waited" />
 
         <ProgressBar
                 android:id="@+id/waiting_addMinBtn"
