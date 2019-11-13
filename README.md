@@ -11,3 +11,6 @@ Features:
 2. You can complain in a chat room with everyone who has the app, in order for us to have more proof, and create more pressure.
 3. You can upload images, in order for us to have more proof, and create more pressure.
 4. You can see how much time the train was late in a calendar (per day).
+
+
+*we estimate that value by the average sallery by the average working hours per month.
