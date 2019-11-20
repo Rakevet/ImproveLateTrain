@@ -8,9 +8,10 @@ import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
 import android.widget.EditText
+import com.improve.latetrain.activities.DrawerActivity
 import kotlinx.android.synthetic.main.content_drawer.*
 
-class EditTextBackEvent: EditText {
+class CustomEditTextKeyboardEvent: EditText {
 
     constructor(context: Context):super(context)
 

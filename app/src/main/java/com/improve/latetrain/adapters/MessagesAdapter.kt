@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.improve.latetrain.Message
+import com.improve.latetrain.data.Message
 import com.improve.latetrain.R
 import kotlinx.android.synthetic.main.message_layout_left.view.*
 

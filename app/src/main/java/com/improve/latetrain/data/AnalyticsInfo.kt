@@ -1,4 +1,4 @@
-package com.improve.latetrain
+package com.improve.latetrain.data
 
 import android.content.Context
 import android.os.Bundle
@@ -8,7 +8,7 @@ object AnalyticsInfo{
     private var INSTANCE: FirebaseAnalytics? = null
 
     private fun getInstance(context: Context): FirebaseAnalytics{
-        if(INSTANCE==null)
+        if(INSTANCE ==null)
             INSTANCE = FirebaseAnalytics.getInstance(context)
         return INSTANCE as FirebaseAnalytics
     }

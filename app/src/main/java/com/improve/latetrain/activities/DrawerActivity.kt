@@ -1,4 +1,4 @@
-package com.improve.latetrain
+package com.improve.latetrain.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,12 +12,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.ShareActionProvider
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.improve.latetrain.BuildConfig
+import com.improve.latetrain.FirebaseConnection
+import com.improve.latetrain.R
 import com.improve.latetrain.fragments.AddMinsFragment
 import com.improve.latetrain.fragments.ChatFragment
 import com.improve.latetrain.fragments.HistoryFragment
@@ -37,14 +37,12 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     private lateinit var sendIntent: Intent
     private var isSwithChecked = true
     private var lastMinutes = ""
+    private lateinit var minutesObserver: Observer<String>
+    private val firebaseFunctions = FirebaseConnection()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_drawer)
-
-        getMinutes(live_minutes)
-        setSwitch(minutes_nis_switch, live_minutes, textlivebar_tv)
-
         sendIntent = Intent().apply {
             action = Intent.ACTION_SEND
             type = "text/plain"
@@ -52,9 +50,23 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             putExtra(Intent.EXTRA_TEXT,
                 baseContext?.resources?.getString(R.string.share_app_url_drawer) + BuildConfig.APPLICATION_ID)
         }
+        bindUI()
+    }
 
+    override fun onStart() {
+        super.onStart()
+        getMinutes(minutes_nis_switch, live_minutes, textlivebar_tv)
+        setSwitch(minutes_nis_switch, live_minutes, textlivebar_tv)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        firebaseFunctions.removeTotalWaitingMinutesListener()
+        firebaseFunctions.totalWaitingMinutes.removeObserver(minutesObserver)
+    }
+
+    private fun bindUI() {
         setSupportActionBar(toolbar)
-
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val toggle = ActionBarDrawerToggle(
@@ -66,30 +78,27 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-
         navView.setNavigationItemSelectedListener(this)
-
         bottomNavView = bottom_nav_view
         bottomNavView.setOnNavigationItemSelectedListener(onBottomNavigationItemSelectedListener)
         bottomNavView.selectedItemId = R.id.navigation_add_mins
     }
 
-    fun setSwitch(switch: Switch, minutes: TextView, text_bar: TextView){
+    fun setSwitch(switch: Switch, minutes: TextView, text_bar: TextView) {
         switch.isChecked = isSwithChecked
         switch.setOnClickListener {
             changeLiveContent(switch, minutes, text_bar)
         }
     }
 
-    private fun changeLiveContent(switch: Switch, minutes: TextView, text_bar: TextView){
-        if(switch.isChecked){
+    private fun changeLiveContent(switch: Switch, minutes: TextView, text_bar: TextView) {
+        if (switch.isChecked) {
             isSwithChecked = true
             minutes.text = lastMinutes
             text_bar.text = getString(R.string.train_waiting_time_content)
-        }
-        else{
+        } else {
             isSwithChecked = false
-            val number = lastMinutes.toDouble()*1.016
+            val number = lastMinutes.toDouble() * 1.016
             val df = DecimalFormat("#.##")
             df.roundingMode = RoundingMode.CEILING
             minutes.text = df.format(number).toString()
@@ -97,24 +106,15 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         }
     }
 
-    fun getMinutes(minutes: TextView){
+    fun getMinutes(switch: Switch, minutes: TextView, text_bar: TextView) {
         minutes.text = getString(R.string.no_internet_connection_drawer)
-        val instance = FirebaseDatabase.getInstance()
-        val totalMinutesLate = instance.getReference(FirebaseInfo.TOTAL_TIME_PATH)
-        totalMinutesLate.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {}
-            override fun onDataChange(p0: DataSnapshot) {
-                lastMinutes = p0.value.toString()
-                if(isSwithChecked)
-                    minutes.text = lastMinutes
-                else{
-                    val number = lastMinutes.toDouble()*1.016
-                    val df = DecimalFormat("#.##")
-                    df.roundingMode = RoundingMode.CEILING
-                    minutes.text = df.format(number).toDouble().toString()
-                }
-            }
-        })
+        minutesObserver = Observer { totalMinutes ->
+            lastMinutes = totalMinutes
+            switch.isChecked = isSwithChecked
+            changeLiveContent(switch, minutes, text_bar)
+        }
+        firebaseFunctions.totalWaitingMinutes.observe(this, minutesObserver)
+        firebaseFunctions.getTotalWaitingMinutes()
     }
 
     override fun onBackPressed() {
@@ -129,12 +129,7 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.drawer, menu)
         shareActionProvider = ShareActionProvider(this)
-        shareActionProvider?.setShareIntent(
-            Intent.createChooser(
-                sendIntent,
-                getString(R.string.share_drawer)
-            )
-        )
+        shareActionProvider?.setShareIntent(Intent.createChooser(sendIntent, getString(R.string.share_drawer)))
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -147,14 +142,14 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val intent  = when (item.itemId) {
+        val intent = when (item.itemId) {
             R.id.nav_home -> Intent(this, DrawerActivity::class.java)
             R.id.nav_about_us -> Intent(this, AboutUsActivity::class.java)
             R.id.nav_write_to_us -> Intent(this, WriteUsActivity::class.java)
             else -> null
         }
         drawer_layout.closeDrawer(GravityCompat.START)
-        if(intent!=null)
+        if (intent != null)
             startActivity(intent)
         else
             startActivity(Intent.createChooser(sendIntent, getString(R.string.share_drawer)))

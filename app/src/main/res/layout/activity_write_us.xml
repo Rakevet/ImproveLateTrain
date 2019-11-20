@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
         android:background="#FFFFFF"
-        tools:context=".WriteUsActivity">
+        tools:context=".activities.WriteUsActivity">
 
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_awu"

@@ -21,21 +21,19 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.database.*
-import com.improve.latetrain.AnalyticsInfo.sendAnalytics
+import com.improve.latetrain.data.AnalyticsInfo.sendAnalytics
 import com.improve.latetrain.BuildConfig
-import com.improve.latetrain.FirebaseInfo
-import com.improve.latetrain.LocationCheck
+import com.improve.latetrain.FirebaseConnection
+import com.improve.latetrain.data.LocationCheck
 import com.improve.latetrain.R
 import com.improve.latetrain.adapters.SpinnerAdapter
 import kotlinx.android.synthetic.main.fragment_add_mins.*
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.math.absoluteValue
 
 class AddMinsFragment : Fragment() {
@@ -47,9 +45,6 @@ class AddMinsFragment : Fragment() {
     lateinit var stationsList: MutableMap<String, Location>
     lateinit var sharedPreferences: SharedPreferences
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private val instance = FirebaseDatabase.getInstance()
-    private val totalWaitingPath = instance.getReference(FirebaseInfo.TOTAL_TIME_PATH)
-    private val totalDaysPath = instance.getReference(FirebaseInfo.TOTAL_DAYS)
     private lateinit var locationCallback: LocationCallback
     private lateinit var locationRequest: LocationRequest
     private var lastTime: Long = 0
@@ -109,66 +104,40 @@ class AddMinsFragment : Fragment() {
             if (minutes > 0 && isDestinationSelected && isNotSame) {
                 addMinBtn.visibility = View.GONE
                 waiting_addMinBtn.visibility = View.VISIBLE
-                val currentDay = SimpleDateFormat("dd", Locale.getDefault()).format(Date()).toInt()
-                val currentMonth = SimpleDateFormat("MM", Locale.getDefault()).format(Date()).toInt()
-                val currentYear = SimpleDateFormat("yyyy", Locale.getDefault()).format(Date()).toInt()
 
-                totalWaitingPath.runTransaction(object : Transaction.Handler {
-                    override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
-                        totalDaysPath.child(currentYear.toString()).child(currentMonth.toString())
-                            .child(currentDay.toString()).child("minutes")
-                            .runTransaction(object : Transaction.Handler {
-                                override fun onComplete(p0: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
-                                    waiting_addMinBtn.visibility = View.GONE
-                                    success_addMinBtn.visibility = View.VISIBLE
-                                    val animation = AlphaAnimation(1f, 0f)
-                                    animation.duration = 500
-                                    animation.interpolator = LinearInterpolator()
-                                    animation.repeatCount = 1
-                                    animation.repeatMode = Animation.REVERSE
-                                    success_addMinBtn.startAnimation(animation)
-                                    (animation_layout as LottieAnimationView).cancelAnimation()
-                                    animation_layout.visibility = View.INVISIBLE
-                                    context?.let{
-                                        sendAnalytics("addMinBtn", arrayListOf(Pair("", "")), it)
-                                    }
-                                    Toast.makeText(context, getString(R.string.thanks_he), Toast.LENGTH_LONG).show()
-                                    Handler().postDelayed({
-                                        Toast.makeText(context, getString(R.string.waiting_message_addmins), Toast.LENGTH_LONG).show()
-                                    }, 2000)
-                                }
-                                override fun doTransaction(p0: MutableData): Transaction.Result {
-                                    if (p0.getValue(Int::class.java) == null) {
-                                        p0.value = minutes
-                                        totalDaysPath.child(currentYear.toString()).child(currentMonth.toString())
-                                            .child(currentDay.toString()).child("date").setValue(currentDay)
-                                        return Transaction.success(p0)
-                                    }
-                                    val dayData = p0.getValue(Int::class.java)
-                                    p0.value = dayData?.plus(minutes)
-                                    return Transaction.success(p0)
-                                }
-                            })
-                    }
-
-                    override fun doTransaction(mutableData: MutableData): Transaction.Result {
+                val firebaseFunctions = FirebaseConnection()
+                firebaseFunctions.uploadMinutes(minutes)
+                val uploadComplteObserver = Observer<String>{message ->
+                    if(message == firebaseFunctions.SUCCESS){
                         sharedPreferences.edit()?.putLong(LAST_CLICK, System.currentTimeMillis() / 1000)?.apply()
-                        if (mutableData.getValue(Int::class.java) == null) {
-                            mutableData.value = minutes
-                            return Transaction.success(mutableData)
+                        waiting_addMinBtn.visibility = View.GONE
+                        success_addMinBtn.visibility = View.VISIBLE
+                        val animation = AlphaAnimation(1f, 0f)
+                        animation.duration = 500
+                        animation.interpolator = LinearInterpolator()
+                        animation.repeatCount = 1
+                        animation.repeatMode = Animation.REVERSE
+                        success_addMinBtn.startAnimation(animation)
+                        (animation_layout as LottieAnimationView).cancelAnimation()
+                        animation_layout.visibility = View.INVISIBLE
+                        context?.let{
+                            sendAnalytics("addMinBtn", arrayListOf(Pair("", "")), it)
                         }
-                        val data = mutableData.getValue(Int::class.java)
-                        mutableData.value = data?.plus(minutes)
-                        return Transaction.success(mutableData)
+                        Toast.makeText(context, getString(R.string.thanks_he), Toast.LENGTH_LONG).show()
+                        Handler().postDelayed({
+                            Toast.makeText(context, getString(R.string.waiting_message_addmins), Toast.LENGTH_LONG).show()
+                        }, 2000)
                     }
-                })
-            } else {
-                Toast.makeText(
-                    context,
-                    getString(R.string.please_fill_requiered_information_addmins),
-                    Toast.LENGTH_SHORT
-                ).show()
+                    else{
+                        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                        addMinBtn.visibility = View.VISIBLE
+                        waiting_addMinBtn.visibility = View.GONE
+                    }
+                }
+                firebaseFunctions.uploadMinutesComplete.observe(this, uploadComplteObserver)
             }
+            else
+                Toast.makeText(context, getString(R.string.please_fill_requiered_information_addmins), Toast.LENGTH_SHORT).show()
         }
 
         val adapterLocations = SpinnerAdapter(

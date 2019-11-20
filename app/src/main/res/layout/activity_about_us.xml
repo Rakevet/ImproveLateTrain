@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#FFFFFF"
-        tools:context=".AboutUsActivity">
+        tools:context=".activities.AboutUsActivity">
 
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_aau"
@@ -97,7 +97,7 @@
             app:layout_constraintBottom_toTopOf="@+id/chani_profile_text_fau"
             android:src="@drawable/default_profile"
             android:layout_marginBottom="16dp"
-            />
+            android:contentDescription="@string/profile_picture_content_description" />
     <TextView
             android:id="@+id/yishai_profile_text_fau"
             app:layout_constraintLeft_toLeftOf="@id/yishai_profile_fau"

@@ -1,4 +1,6 @@
-package com.improve.latetrain
+package com.improve.latetrain.data
+
+import com.improve.latetrain.BuildConfig
 
 object FirebaseInfo {
     val TOTAL_TIME_PATH : String = if (!BuildConfig.DEBUG)  "totalMins" else "debug_total_mins"

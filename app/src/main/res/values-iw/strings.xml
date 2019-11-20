@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">רקבת</string>
+    <string name="app_name">LateTrain</string>
     <string name="title_dashboard">דשבורד</string>
     <string name="title_home">בית</string>
     <string name="title_notifications">עדכונים</string>
@@ -70,7 +70,7 @@
     <string name="date_path">%1$d/%2$d/%3$d</string>
     <string name="about_us_name">אודותינו</string>
     <string name="write_us_name">כתבו לנו</string>
-    <string name="app_subtitle">הופכים את הרקבת לרכבת</string>
+    <string name="app_subtitle">עושים שינוי ברכבת</string>
     <string name="image_uploaded_message">התמונה הועלתה וממתינה לאישור</string>
     <string name="waiting_message_addmins">תוכלו לדווח שוב בעוד 30 דקות</string>
     <string name="thanks_he">תודה!</string>
@@ -87,5 +87,6 @@
     <string name="app_path">com.improve.latetrain</string>
     <string name="to_info">to info</string>
     <string name="send_minutes_waited">send_minutes_waited</string>
+    <string name="profile_picture_content_description">Profile picture</string>
 
 </resources>

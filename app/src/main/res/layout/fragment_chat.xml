@@ -38,7 +38,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent" />
 
-        <com.improve.latetrain.EditTextBackEvent
+        <com.improve.latetrain.CustomEditTextKeyboardEvent
                 android:id="@+id/write_et"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

@@ -8,13 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.improve.latetrain.AnalyticsInfo
-import com.improve.latetrain.FirebaseInfo
+import androidx.lifecycle.Observer
+import com.improve.latetrain.FirebaseConnection
 import com.improve.latetrain.R
+import com.improve.latetrain.data.AnalyticsInfo
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
 import kotlinx.android.synthetic.main.fragment_history.*
@@ -23,9 +20,11 @@ import java.util.*
 
 class HistoryFragment : Fragment() {
 
-    private val instance = FirebaseDatabase.getInstance()
-    private var minutesPerDaysPath = instance.getReference(FirebaseInfo.TOTAL_DAYS)
-    private lateinit var postListener: ChildEventListener
+    private lateinit var minutesPerDayObserver: Observer<Pair<Int, String>>
+    private val firebaseFunctions = FirebaseConnection()
+    private var series = BarGraphSeries(arrayOf())
+    private var selectedDaySeries = BarGraphSeries(arrayOf())
+    private var tempDay = "0"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,12 +34,6 @@ class HistoryFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        val currentDay = SimpleDateFormat("dd", Locale.getDefault()).format(Date()).toInt()
-        val currentMonth = SimpleDateFormat("MM", Locale.getDefault()).format(Date()).toInt()
-        val currentYear = SimpleDateFormat("yyyy", Locale.getDefault()).format(Date()).toInt()
-        setGraph(currentDay, currentMonth, currentYear)
-
         date_btn_fh.setOnClickListener {
             context?.let {
                 datePickerDialog(it).show()
@@ -51,37 +44,48 @@ class HistoryFragment : Fragment() {
         }
     }
 
-    private fun setGraph(currentDay: Int, currentMonth: Int, currentYear: Int) {
-        minutesPerDaysPath = instance.getReference(FirebaseInfo.TOTAL_DAYS)
-            .child(currentYear.toString()).child(currentMonth.toString())
-        val series = BarGraphSeries(arrayOf())
+    override fun onStart() {
+        super.onStart()
+        val currentDay = SimpleDateFormat("dd", Locale.getDefault()).format(Date())
+        setGraph(currentDay)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        firebaseFunctions.removeDailyMinutesListener()
+        firebaseFunctions.minutesPerDay.removeObserver(minutesPerDayObserver)
+    }
+
+    private fun setGraph(currentDay: String) {
         series.color = Color.parseColor("#3880EC")
-        val selectedDaySeries = BarGraphSeries(arrayOf())
         selectedDaySeries.color = Color.parseColor("#e6a430")
         graph_view_fh.viewport.isXAxisBoundsManual = true
         graph_view_fh?.viewport?.setMaxX(31.0)
         graph_view_fh?.viewport?.setMinX(0.0)
-        postListener = object : ChildEventListener {
-            override fun onChildMoved(p0: DataSnapshot, p1: String?) {}
-            override fun onChildChanged(p0: DataSnapshot, p1: String?) {}
-            override fun onChildRemoved(p0: DataSnapshot) {}
-            override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
-                val minutes = dataSnapshot.child("minutes").getValue(Int::class.java)
-                val day = dataSnapshot.child("date").getValue(Int::class.java)
-                day?.let {
-                    if (day==currentDay) {
-                        selectedDaySeries.appendData(DataPoint(it.toDouble(), minutes?.toDouble() ?: return), true, 31, true)
-                        graph_view_fh?.addSeries(selectedDaySeries)
-                    }
-                    else {
-                        series.appendData(DataPoint(it.toDouble(), minutes?.toDouble() ?: return), true, 31, true)
-                        graph_view_fh?.addSeries(series)
-                    }
+        minutesPerDayObserver = Observer { pair ->
+            val minutes = pair.first
+            val day = pair.second
+            if(tempDay.toInt()==day.toInt()){
+                graph_view_fh.removeAllSeries()
+                series = BarGraphSeries(arrayOf())
+                selectedDaySeries = BarGraphSeries(arrayOf())
+                series.color = Color.parseColor("#3880EC")
+                selectedDaySeries.color = Color.parseColor("#e6a430")
+            }
+            else{
+                if (day==currentDay) {
+                    selectedDaySeries.appendData(DataPoint(day.toDouble(), minutes.toDouble()), true, 31, true)
+                    graph_view_fh?.addSeries(selectedDaySeries)
+                }
+                else {
+                    series.appendData(DataPoint(day.toDouble(), minutes.toDouble()), true, 31, true)
+                    graph_view_fh?.addSeries(series)
                 }
             }
-            override fun onCancelled(databaseError: DatabaseError) {}
+            tempDay = day
         }
-        minutesPerDaysPath.addChildEventListener(postListener)
+        firebaseFunctions.minutesPerDay.observe(this, minutesPerDayObserver)
+        firebaseFunctions.getDailyMinutes()
     }
 
     private fun datePickerDialog(context: Context): DatePickerDialog {
@@ -92,9 +96,10 @@ class HistoryFragment : Fragment() {
         return DatePickerDialog(context,
             DatePickerDialog.OnDateSetListener { _, yearS, monthOfYear, dayOfMonth ->
                 date_btn_fh.text = getString(R.string.date_path, dayOfMonth,(monthOfYear + 1),yearS)
-                minutesPerDaysPath.removeEventListener(postListener)
                 graph_view_fh.removeAllSeries()
-                setGraph(dayOfMonth, monthOfYear + 1, yearS)
+                firebaseFunctions.removeDailyMinutesListener()
+                firebaseFunctions.minutesPerDay.removeObserver(minutesPerDayObserver)
+                setGraph(dayOfMonth.toString())
             }, year, month, day
         )
     }

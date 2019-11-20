@@ -1,4 +1,4 @@
-package com.improve.latetrain
+package com.improve.latetrain.activities
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.google.android.material.snackbar.Snackbar
+import com.improve.latetrain.R
 import kotlinx.android.synthetic.main.activity_write_us.*
 
 class WriteUsActivity : AppCompatActivity() {
