@@ -13,4 +13,4 @@ Features:
 4. You can see how much time the train was late in a calendar (per day).
 
 
-*we estimate that value by the average sallery by the average working hours per month.
+*we estimate that value by the average sallery times the average working hours per month.
