@@ -9,9 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.improve.latetrain.FirebaseConnection
+import com.improve.latetrain.data.firebase.FirebaseConnection
 import com.improve.latetrain.R
-import com.improve.latetrain.data.AnalyticsInfo
+import com.improve.latetrain.data.firebase.AnalyticsInfo
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
 import kotlinx.android.synthetic.main.fragment_history.*

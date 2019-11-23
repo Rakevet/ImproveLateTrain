@@ -2,6 +2,7 @@ package com.improve.latetrain.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -16,7 +17,8 @@ import androidx.lifecycle.Observer
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.improve.latetrain.BuildConfig
-import com.improve.latetrain.FirebaseConnection
+import com.improve.latetrain.DrawerViewModel
+import com.improve.latetrain.data.firebase.FirebaseConnection
 import com.improve.latetrain.R
 import com.improve.latetrain.fragments.AddMinsFragment
 import com.improve.latetrain.fragments.ChatFragment
@@ -26,6 +28,7 @@ import kotlinx.android.synthetic.main.activity_drawer.*
 import kotlinx.android.synthetic.main.app_bar_drawer.*
 import kotlinx.android.synthetic.main.content_drawer.*
 import kotlinx.android.synthetic.main.live_bar_layout.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
@@ -39,6 +42,7 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     private var lastMinutes = ""
     private lateinit var minutesObserver: Observer<String>
     private val firebaseFunctions = FirebaseConnection()
+    private val drawerViewModel: DrawerViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +54,7 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             putExtra(Intent.EXTRA_TEXT,
                 baseContext?.resources?.getString(R.string.share_app_url_drawer) + BuildConfig.APPLICATION_ID)
         }
+        Log.d("DrawerActivityTest", drawerViewModel.test())
         bindUI()
     }
 

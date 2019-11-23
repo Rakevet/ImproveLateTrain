@@ -1,4 +1,4 @@
-package com.improve.latetrain.data
+package com.improve.latetrain.data.firebase
 
 import com.improve.latetrain.BuildConfig
 

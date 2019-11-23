@@ -27,9 +27,9 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.improve.latetrain.data.AnalyticsInfo.sendAnalytics
+import com.improve.latetrain.data.firebase.AnalyticsInfo.sendAnalytics
 import com.improve.latetrain.BuildConfig
-import com.improve.latetrain.FirebaseConnection
+import com.improve.latetrain.data.firebase.FirebaseConnection
 import com.improve.latetrain.data.LocationCheck
 import com.improve.latetrain.R
 import com.improve.latetrain.adapters.SpinnerAdapter

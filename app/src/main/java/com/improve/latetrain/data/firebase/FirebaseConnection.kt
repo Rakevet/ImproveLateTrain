@@ -1,4 +1,4 @@
-package com.improve.latetrain
+package com.improve.latetrain.data.firebase
 
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
@@ -6,7 +6,6 @@ import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
-import com.improve.latetrain.data.FirebaseInfo
 import com.improve.latetrain.data.Message
 import java.text.SimpleDateFormat
 import java.util.*
@@ -16,7 +15,8 @@ class FirebaseConnection {
     private val realtimeInstance: FirebaseDatabase by lazy { FirebaseDatabase.getInstance() }
     private val firestoreInstance: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
     private val storageInstance: FirebaseStorage by lazy { FirebaseStorage.getInstance() }
-    private val totalMinutesPath: DatabaseReference by lazy {realtimeInstance.getReference(FirebaseInfo.TOTAL_TIME_PATH)}
+    private val totalMinutesPath: DatabaseReference by lazy {realtimeInstance.getReference(
+        FirebaseInfo.TOTAL_TIME_PATH)}
     private val dailyPath: DatabaseReference by lazy {
         realtimeInstance.getReference(FirebaseInfo.TOTAL_DAYS)
             .child(currentYear).child(currentMonth).child(currentDay)

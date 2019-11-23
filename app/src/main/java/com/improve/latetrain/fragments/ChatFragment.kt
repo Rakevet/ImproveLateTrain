@@ -11,11 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.improve.latetrain.FirebaseConnection
+import com.improve.latetrain.data.firebase.FirebaseConnection
 import com.improve.latetrain.R
 import com.improve.latetrain.activities.DrawerActivity
 import com.improve.latetrain.adapters.MessagesAdapter
-import com.improve.latetrain.data.AnalyticsInfo
+import com.improve.latetrain.data.firebase.AnalyticsInfo
 import com.improve.latetrain.data.Message
 import kotlinx.android.synthetic.main.content_drawer.*
 import kotlinx.android.synthetic.main.fragment_chat.*

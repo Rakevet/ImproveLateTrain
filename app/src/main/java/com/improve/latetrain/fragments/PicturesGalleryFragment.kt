@@ -12,11 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.QuerySnapshot
-import com.improve.latetrain.FirebaseConnection
+import com.improve.latetrain.data.firebase.FirebaseConnection
 import com.improve.latetrain.R
 import com.improve.latetrain.activities.DrawerActivity
 import com.improve.latetrain.adapters.GalleryAdapter
-import com.improve.latetrain.data.AnalyticsInfo
+import com.improve.latetrain.data.firebase.AnalyticsInfo
 import com.improve.latetrain.data.ImageFirestore
 import kotlinx.android.synthetic.main.fragment_pictures_gallery.*
 import kotlinx.android.synthetic.main.live_bar_layout.*

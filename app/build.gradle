@@ -49,23 +49,20 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 
     //Firebase
-    implementation 'com.google.firebase:firebase-core:17.2.0'
-    implementation 'com.google.firebase:firebase-auth:19.0.0'
-    implementation 'com.google.firebase:firebase-database:19.0.0'
-    implementation 'com.google.firebase:firebase-messaging:20.0.0'
-    implementation 'com.google.firebase:firebase-storage:19.0.0'
+    implementation 'com.google.firebase:firebase-core:17.2.1'
+    implementation 'com.google.firebase:firebase-auth:19.1.0'
+    implementation 'com.google.firebase:firebase-database:19.2.0'
+    implementation 'com.google.firebase:firebase-messaging:20.0.1'
+    implementation 'com.google.firebase:firebase-storage:19.1.0'
     implementation 'com.firebaseui:firebase-ui-storage:4.3.1'
-    implementation 'com.google.firebase:firebase-analytics:17.2.0'
-    implementation 'com.google.firebase:firebase-firestore:21.2.1'
+    implementation 'com.google.firebase:firebase-analytics:17.2.1'
+    implementation 'com.google.firebase:firebase-firestore:21.3.0'
     //Crashlytics
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     //Analytics
     implementation 'com.google.firebase:firebase-analytics:17.2.1'
     //Performance
     implementation 'com.google.firebase:firebase-perf:19.0.2'
-    //Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:2.2.0-alpha01"
-    implementation "androidx.navigation:navigation-ui-ktx:2.2.0-alpha01"
     //Location
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     //Lottie
@@ -79,10 +76,13 @@ dependencies {
     implementation 'com.jjoe64:graphview:4.2.2'
     //AboutLibraries
     implementation "com.mikepenz:aboutlibraries:7.0.4"
+    //Koin
+    implementation 'org.koin:koin-androidx-viewmodel:1.0.2'
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
 }
 apply plugin: 'com.google.gms.google-services'

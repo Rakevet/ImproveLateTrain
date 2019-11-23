@@ -9,7 +9,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import com.improve.latetrain.BuildConfig
-import com.improve.latetrain.FirebaseConnection
+import com.improve.latetrain.data.firebase.FirebaseConnection
 import com.improve.latetrain.GlideApp
 import com.improve.latetrain.R
 import com.improve.latetrain.data.ImageFirestore

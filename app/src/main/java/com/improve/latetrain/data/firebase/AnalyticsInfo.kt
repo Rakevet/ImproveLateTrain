@@ -1,4 +1,4 @@
-package com.improve.latetrain.data
+package com.improve.latetrain.data.firebase
 
 import android.content.Context
 import android.os.Bundle
