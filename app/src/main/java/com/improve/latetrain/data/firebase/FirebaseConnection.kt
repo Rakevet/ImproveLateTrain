@@ -7,10 +7,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import com.improve.latetrain.data.Message
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
 class FirebaseConnection {
+
+    private val observers = arrayListOf<IFirebaseObserver>()
 
     private val realtimeInstance: FirebaseDatabase by lazy { FirebaseDatabase.getInstance() }
     private val firestoreInstance: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
@@ -21,7 +25,6 @@ class FirebaseConnection {
         realtimeInstance.getReference(FirebaseInfo.TOTAL_DAYS)
             .child(currentYear).child(currentMonth).child(currentDay)
     }
-    val totalWaitingMinutes: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val chatMessages: MutableLiveData<Message> by lazy { MutableLiveData<Message>() }
     val uploadMinutesComplete: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val minutesPerDay: MutableLiveData<Pair<Int, String>> by lazy {
@@ -36,6 +39,10 @@ class FirebaseConnection {
     private val currentMonth = SimpleDateFormat("MM", Locale.getDefault()).format(Date())
     private val currentYear = SimpleDateFormat("yyyy", Locale.getDefault()).format(Date())
     val SUCCESS = "SUCCESS"
+
+    fun addObserver(observer: IFirebaseObserver){
+        this.observers.add(observer)
+    }
 
     fun adminDeleteImageFromStorage(imageRef: String){
         storageInstance.reference.child("images/$imageRef").delete()
@@ -103,11 +110,17 @@ class FirebaseConnection {
         }
     }
 
-    fun getTotalWaitingMinutes() {
+    fun getTotalWaitingMinutes(scope: CoroutineScope) {
         totalWaitingMinutesListener = object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {}
             override fun onDataChange(p0: DataSnapshot) {
-                totalWaitingMinutes.value = "${p0.value}"
+                scope.launch {
+                    p0.value?.let {
+                        for (observer in observers) {
+                            observer.totalMinutesChanged(p0.value as Long)
+                        }
+                    }
+                }
             }
         }
         totalWaitingMinutesListener?.let {

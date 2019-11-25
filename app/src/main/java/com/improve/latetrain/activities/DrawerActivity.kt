@@ -20,6 +20,7 @@ import com.improve.latetrain.BuildConfig
 import com.improve.latetrain.DrawerViewModel
 import com.improve.latetrain.data.firebase.FirebaseConnection
 import com.improve.latetrain.R
+import com.improve.latetrain.data.db.LiveTotalMinutes
 import com.improve.latetrain.fragments.AddMinsFragment
 import com.improve.latetrain.fragments.ChatFragment
 import com.improve.latetrain.fragments.HistoryFragment
@@ -40,7 +41,6 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     private lateinit var sendIntent: Intent
     private var isSwithChecked = true
     private var lastMinutes = ""
-    private lateinit var minutesObserver: Observer<String>
     private val firebaseFunctions = FirebaseConnection()
     private val drawerViewModel: DrawerViewModel by viewModel()
 
@@ -54,20 +54,17 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             putExtra(Intent.EXTRA_TEXT,
                 baseContext?.resources?.getString(R.string.share_app_url_drawer) + BuildConfig.APPLICATION_ID)
         }
-        Log.d("DrawerActivityTest", drawerViewModel.test())
         bindUI()
     }
 
     override fun onStart() {
         super.onStart()
-        getMinutes(minutes_nis_switch, live_minutes, textlivebar_tv)
-        setSwitch(minutes_nis_switch, live_minutes, textlivebar_tv)
+        drawerViewModel.startListeningForTotalWaitingMinutes()
     }
 
     override fun onStop() {
         super.onStop()
-        firebaseFunctions.removeTotalWaitingMinutesListener()
-        firebaseFunctions.totalWaitingMinutes.removeObserver(minutesObserver)
+        drawerViewModel.stopListeningForTotalWaitingMinutes()
     }
 
     private fun bindUI() {
@@ -87,6 +84,9 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         bottomNavView = bottom_nav_view
         bottomNavView.setOnNavigationItemSelectedListener(onBottomNavigationItemSelectedListener)
         bottomNavView.selectedItemId = R.id.navigation_add_mins
+
+        getMinutes(minutes_nis_switch, live_minutes, textlivebar_tv)
+        setSwitch(minutes_nis_switch, live_minutes, textlivebar_tv)
     }
 
     fun setSwitch(switch: Switch, minutes: TextView, text_bar: TextView) {
@@ -113,13 +113,14 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
 
     fun getMinutes(switch: Switch, minutes: TextView, text_bar: TextView) {
         minutes.text = getString(R.string.no_internet_connection_drawer)
-        minutesObserver = Observer { totalMinutes ->
-            lastMinutes = totalMinutes
-            switch.isChecked = isSwithChecked
-            changeLiveContent(switch, minutes, text_bar)
+        val minutesObserver = Observer<LiveTotalMinutes> { totalMinutes ->
+            totalMinutes?.let {
+                lastMinutes = "${totalMinutes.liveTotalMinutes}"
+                switch.isChecked = isSwithChecked
+                changeLiveContent(switch, minutes, text_bar)
+            }
         }
-        firebaseFunctions.totalWaitingMinutes.observe(this, minutesObserver)
-        firebaseFunctions.getTotalWaitingMinutes()
+        drawerViewModel.totalMinutes.observe(this, minutesObserver)
     }
 
     override fun onBackPressed() {
