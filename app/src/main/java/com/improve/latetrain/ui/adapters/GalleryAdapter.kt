@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import com.improve.latetrain.BuildConfig
 import com.improve.latetrain.viewmodel.DrawerViewModel
+import com.improve.latetrain.data.firebase.GlideApp
 import com.improve.latetrain.R
 import com.improve.latetrain.data.entities.ImageFirestore
-import com.improve.latetrain.data.firebase.GlideApp
 import kotlinx.android.synthetic.main.gallery_row_layout.view.*
 
 class GalleryAdapter(var list: MutableList<ImageFirestore>, private val drawerViewModel: DrawerViewModel): RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
