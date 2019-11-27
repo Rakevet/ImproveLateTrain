@@ -1,4 +1,4 @@
-package com.improve.latetrain.activities
+package com.improve.latetrain.ui.activities
 
 import android.content.ActivityNotFoundException
 import android.content.Intent

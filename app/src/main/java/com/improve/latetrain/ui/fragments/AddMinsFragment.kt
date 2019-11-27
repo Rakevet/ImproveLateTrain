@@ -1,4 +1,4 @@
-package com.improve.latetrain.fragments
+package com.improve.latetrain.ui.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -29,15 +29,18 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.improve.latetrain.data.firebase.AnalyticsInfo.sendAnalytics
 import com.improve.latetrain.BuildConfig
-import com.improve.latetrain.data.firebase.FirebaseConnection
+import com.improve.latetrain.viewmodel.DrawerViewModel
 import com.improve.latetrain.data.LocationCheck
 import com.improve.latetrain.R
-import com.improve.latetrain.adapters.SpinnerAdapter
+import com.improve.latetrain.data.firebase.FirebaseInfo
+import com.improve.latetrain.ui.adapters.SpinnerAdapter
 import kotlinx.android.synthetic.main.fragment_add_mins.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.absoluteValue
 
 class AddMinsFragment : Fragment() {
 
+    private val drawerViewModel: DrawerViewModel by viewModel()
     private val LAST_CLICK = "LAST_CLICK"
     private val REQUEST_CHECK_SETTINGS = 1
     private val MY_PERMISSIONS_REQUEST_LOCATION = 2
@@ -105,10 +108,9 @@ class AddMinsFragment : Fragment() {
                 addMinBtn.visibility = View.GONE
                 waiting_addMinBtn.visibility = View.VISIBLE
 
-                val firebaseFunctions = FirebaseConnection()
-                firebaseFunctions.uploadMinutes(minutes)
+                drawerViewModel.uploadMinutes(minutes)
                 val uploadComplteObserver = Observer<String>{message ->
-                    if(message == firebaseFunctions.SUCCESS){
+                    if(message == FirebaseInfo.SUCCESS){
                         sharedPreferences.edit()?.putLong(LAST_CLICK, System.currentTimeMillis() / 1000)?.apply()
                         waiting_addMinBtn.visibility = View.GONE
                         success_addMinBtn.visibility = View.VISIBLE
@@ -134,7 +136,7 @@ class AddMinsFragment : Fragment() {
                         waiting_addMinBtn.visibility = View.GONE
                     }
                 }
-                firebaseFunctions.uploadMinutesComplete.observe(this, uploadComplteObserver)
+                drawerViewModel.uploadMinutesComplete.observe(this, uploadComplteObserver)
             }
             else
                 Toast.makeText(context, getString(R.string.please_fill_requiered_information_addmins), Toast.LENGTH_SHORT).show()
@@ -177,7 +179,7 @@ class AddMinsFragment : Fragment() {
             val location = Location(LocationManager.GPS_PROVIDER)
             location.longitude = longiNlatti[1].toDouble()
             location.latitude = longiNlatti[0].toDouble()
-            stationsList.put(lineList[0], location)
+            stationsList[lineList[0]] = location
         }
 
         activity?.let {

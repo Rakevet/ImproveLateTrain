@@ -1,4 +1,4 @@
-package com.improve.latetrain.data.db
+package com.improve.latetrain.data.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

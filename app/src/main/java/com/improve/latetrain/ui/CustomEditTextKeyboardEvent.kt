@@ -1,4 +1,4 @@
-package com.improve.latetrain
+package com.improve.latetrain.ui
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -8,7 +8,7 @@ import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
 import android.widget.EditText
-import com.improve.latetrain.activities.DrawerActivity
+import com.improve.latetrain.ui.activities.DrawerActivity
 import kotlinx.android.synthetic.main.content_drawer.*
 
 class CustomEditTextKeyboardEvent: EditText {

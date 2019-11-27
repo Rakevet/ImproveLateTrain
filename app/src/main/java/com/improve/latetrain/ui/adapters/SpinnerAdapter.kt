@@ -1,4 +1,4 @@
-package com.improve.latetrain.adapters
+package com.improve.latetrain.ui.adapters
 
 import android.content.Context
 import android.graphics.Typeface

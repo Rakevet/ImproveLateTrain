@@ -1,4 +1,4 @@
-package com.improve.latetrain.adapters
+package com.improve.latetrain.ui.adapters
 
 import android.app.AlertDialog
 import android.content.Context
@@ -9,15 +9,13 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.request.RequestOptions
 import com.improve.latetrain.BuildConfig
-import com.improve.latetrain.data.firebase.FirebaseConnection
+import com.improve.latetrain.viewmodel.DrawerViewModel
 import com.improve.latetrain.GlideApp
 import com.improve.latetrain.R
-import com.improve.latetrain.data.ImageFirestore
+import com.improve.latetrain.data.entities.ImageFirestore
 import kotlinx.android.synthetic.main.gallery_row_layout.view.*
 
-class GalleryAdapter(var list: MutableList<ImageFirestore>): RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
-
-    private val firebaseFunctions = FirebaseConnection()
+class GalleryAdapter(var list: MutableList<ImageFirestore>, private val drawerViewModel: DrawerViewModel): RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GalleryViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.gallery_row_layout, parent, false)
@@ -43,7 +41,7 @@ class GalleryAdapter(var list: MutableList<ImageFirestore>): RecyclerView.Adapte
     }
 
     fun delete(position: Int){
-        firebaseFunctions.adminDeleteWaitingImage(list[position].id)
+        drawerViewModel.adminDeleteWaitingImage(list[position].id)
         list.removeAt(position)
         notifyDataSetChanged()
     }
@@ -59,13 +57,13 @@ class GalleryAdapter(var list: MutableList<ImageFirestore>): RecyclerView.Adapte
                     builder.setTitle(context.getString(R.string.approve_delete_pic))
                     builder.setMessage(context.getString(R.string.approve_delete_pic_message))
                     builder.setPositiveButton(context.getString(R.string.approve_pic)){ _, _ ->
-                        firebaseFunctions.adminUploadApprovedImage(
+                        drawerViewModel.adminUploadApprovedImage(
                             hashMapOf("link" to list[position].content["link"].toString(),
                             "ref" to list[position].content["ref"].toString()))
                         delete(position)
                     }
                     builder.setNegativeButton(context.getString(R.string.delete_pic)){ _, _ ->
-                        firebaseFunctions.adminDeleteImageFromStorage(list[position].content["ref"].toString())
+                        drawerViewModel.adminDeleteImageFromStorage(list[position].content["ref"].toString())
                         delete(position)
                     }
                     val dialog: AlertDialog = builder.create()

@@ -1,8 +1,7 @@
-package com.improve.latetrain.activities
+package com.improve.latetrain.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -17,14 +16,13 @@ import androidx.lifecycle.Observer
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.improve.latetrain.BuildConfig
-import com.improve.latetrain.DrawerViewModel
-import com.improve.latetrain.data.firebase.FirebaseConnection
+import com.improve.latetrain.viewmodel.DrawerViewModel
 import com.improve.latetrain.R
-import com.improve.latetrain.data.db.LiveTotalMinutes
-import com.improve.latetrain.fragments.AddMinsFragment
-import com.improve.latetrain.fragments.ChatFragment
-import com.improve.latetrain.fragments.HistoryFragment
-import com.improve.latetrain.fragments.PicturesGalleryFragment
+import com.improve.latetrain.data.entities.LiveTotalMinutes
+import com.improve.latetrain.ui.fragments.AddMinsFragment
+import com.improve.latetrain.ui.fragments.ChatFragment
+import com.improve.latetrain.ui.fragments.HistoryFragment
+import com.improve.latetrain.ui.fragments.PicturesGalleryFragment
 import kotlinx.android.synthetic.main.activity_drawer.*
 import kotlinx.android.synthetic.main.app_bar_drawer.*
 import kotlinx.android.synthetic.main.content_drawer.*
@@ -41,7 +39,6 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     private lateinit var sendIntent: Intent
     private var isSwithChecked = true
     private var lastMinutes = ""
-    private val firebaseFunctions = FirebaseConnection()
     private val drawerViewModel: DrawerViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -177,7 +174,7 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                 R.id.navigation_history -> HistoryFragment.newInstance()
                 else -> AddMinsFragment.newInstance()
             }
-            localFragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit()
+            localFragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment).commit()
             true
         }
 }

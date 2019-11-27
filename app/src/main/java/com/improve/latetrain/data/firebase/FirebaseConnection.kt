@@ -6,57 +6,46 @@ import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
-import com.improve.latetrain.data.Message
+import com.improve.latetrain.data.entities.Message
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class FirebaseConnection {
-
-    private val observers = arrayListOf<IFirebaseObserver>()
+class FirebaseConnection(private val firebaseObserver: IFirebaseObserver) {
 
     private val realtimeInstance: FirebaseDatabase by lazy { FirebaseDatabase.getInstance() }
     private val firestoreInstance: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
     private val storageInstance: FirebaseStorage by lazy { FirebaseStorage.getInstance() }
-    private val totalMinutesPath: DatabaseReference by lazy {realtimeInstance.getReference(
-        FirebaseInfo.TOTAL_TIME_PATH)}
+    private val totalMinutesPath: DatabaseReference by lazy {
+        realtimeInstance.getReference(
+            FirebaseInfo.TOTAL_TIME_PATH
+        )
+    }
     private val dailyPath: DatabaseReference by lazy {
         realtimeInstance.getReference(FirebaseInfo.TOTAL_DAYS)
             .child(currentYear).child(currentMonth).child(currentDay)
     }
-    val chatMessages: MutableLiveData<Message> by lazy { MutableLiveData<Message>() }
-    val uploadMinutesComplete: MutableLiveData<String> by lazy { MutableLiveData<String>() }
-    val minutesPerDay: MutableLiveData<Pair<Int, String>> by lazy {
-        MutableLiveData<Pair<Int, String>>()
-    }
-    val imagesUrls: MutableLiveData<QuerySnapshot> by lazy {MutableLiveData<QuerySnapshot>()}
-    val uploadImageComplete: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     private var dailyMinutesListener: ChildEventListener? = null
     private var totalWaitingMinutesListener: ValueEventListener? = null
     private var messagesListener: ChildEventListener? = null
     private val currentDay = SimpleDateFormat("dd", Locale.getDefault()).format(Date())
     private val currentMonth = SimpleDateFormat("MM", Locale.getDefault()).format(Date())
     private val currentYear = SimpleDateFormat("yyyy", Locale.getDefault()).format(Date())
-    val SUCCESS = "SUCCESS"
 
-    fun addObserver(observer: IFirebaseObserver){
-        this.observers.add(observer)
-    }
-
-    fun adminDeleteImageFromStorage(imageRef: String){
+    fun adminDeleteImageFromStorage(imageRef: String) {
         storageInstance.reference.child("images/$imageRef").delete()
     }
 
-    fun adminDeleteWaitingImage(id: String){
+    fun adminDeleteWaitingImage(id: String) {
         firestoreInstance.collection(FirebaseInfo.IMAGES_WAITING_REF).document(id).delete()
     }
 
-    fun adminUploadApprovedImage(map: HashMap<String, String>){
+    fun adminUploadApprovedImage(map: HashMap<String, String>) {
         firestoreInstance.collection(FirebaseInfo.IMAGES_APPROVED_REF).add(map)
     }
 
-    fun uploadImage(image: Uri){
+    fun uploadImage(image: Uri) {
         val filename = UUID.randomUUID().toString()
         val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
         var photoRef: String? = ""
@@ -69,24 +58,25 @@ class FirebaseConnection {
             photoRef = task.result?.storage?.name
             ref.downloadUrl
         }.addOnSuccessListener {
-            firestoreInstance.collection(FirebaseInfo.IMAGES_WAITING_REF).add(hashMapOf("link" to it.toString(), "ref" to photoRef))
-                .addOnCompleteListener {completeTask ->
-                    if(completeTask.isSuccessful)
-                        uploadImageComplete.value = SUCCESS
+            firestoreInstance.collection(FirebaseInfo.IMAGES_WAITING_REF)
+                .add(hashMapOf("link" to it.toString(), "ref" to photoRef))
+                .addOnCompleteListener { completeTask ->
+                    if (completeTask.isSuccessful)
+                        firebaseObserver.uploadImageComplete(FirebaseInfo.SUCCESS)
                     else
-                        uploadImageComplete.value = completeTask.exception.toString()
+                        firebaseObserver.uploadImageComplete(completeTask.exception.toString())
                 }
         }
     }
 
-    fun getImagesUrls(){
+    fun getImagesUrls() {
         firestoreInstance.collection(FirebaseInfo.IMAGES_DOWNLOADING_REF).get()
-            .addOnSuccessListener {result->
-                imagesUrls.value = result
+            .addOnSuccessListener { result ->
+                firebaseObserver.getImagesSuccess(result)
             }
     }
 
-    fun getDailyMinutes(){
+    fun getDailyMinutes() {
         dailyMinutesListener = object : ChildEventListener {
             override fun onChildMoved(p0: DataSnapshot, p1: String?) {}
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {}
@@ -94,9 +84,10 @@ class FirebaseConnection {
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 val minutes = dataSnapshot.child("minutes").getValue(Int::class.java)
                 val day = dataSnapshot.ref.key
-                if(minutes!=null && day!=null)
-                    minutesPerDay.value = Pair(minutes, day)
+                if (minutes != null && day != null)
+                    firebaseObserver.dailyMinutesChildAdded(Pair(minutes, day))
             }
+
             override fun onCancelled(databaseError: DatabaseError) {}
         }
         dailyMinutesListener?.let {
@@ -104,7 +95,7 @@ class FirebaseConnection {
         }
     }
 
-    fun removeDailyMinutesListener(){
+    fun removeDailyMinutesListener() {
         dailyMinutesListener?.let {
             dailyPath.parent?.removeEventListener(it)
         }
@@ -116,9 +107,7 @@ class FirebaseConnection {
             override fun onDataChange(p0: DataSnapshot) {
                 scope.launch {
                     p0.value?.let {
-                        for (observer in observers) {
-                            observer.totalMinutesChanged(p0.value as Long)
-                        }
+                        firebaseObserver.totalMinutesChanged(p0.value as Long)
                     }
                 }
             }
@@ -128,7 +117,7 @@ class FirebaseConnection {
         }
     }
 
-    fun removeTotalWaitingMinutesListener(){
+    fun removeTotalWaitingMinutesListener() {
         totalWaitingMinutesListener?.let {
             totalMinutesPath.removeEventListener(it)
         }
@@ -139,10 +128,11 @@ class FirebaseConnection {
             .runTransaction(object : Transaction.Handler {
                 override fun onComplete(error: DatabaseError?, p1: Boolean, p2: DataSnapshot?) {
                     if (error == null)
-                        uploadMinutesComplete.value = SUCCESS
+                        firebaseObserver.uploadMinutesComplete(FirebaseInfo.SUCCESS)
                     else
-                        uploadMinutesComplete.value = error.message
+                        firebaseObserver.uploadMinutesComplete(error.message)
                 }
+
                 override fun doTransaction(p0: MutableData): Transaction.Result {
                     if (p0.getValue(Int::class.java) == null) {
                         p0.value = minutes
@@ -162,8 +152,9 @@ class FirebaseConnection {
                 if (error == null)
                     uploadTotalDays(minutes)
                 else
-                    uploadMinutesComplete.value = error.message
+                    firebaseObserver.uploadMinutesComplete(error.message)
             }
+
             override fun doTransaction(mutableData: MutableData): Transaction.Result {
                 val data = mutableData.getValue(Int::class.java)
                 if (data == null) {
@@ -176,21 +167,22 @@ class FirebaseConnection {
         })
     }
 
-    fun uploadMessage(message: Message){
+    fun uploadMessage(message: Message) {
         dailyPath.child("messages").push().setValue(message)
     }
 
-    fun listenToMessages(){
+    fun listenToMessages() {
         messagesListener = object : ChildEventListener {
             override fun onChildMoved(p0: DataSnapshot, p1: String?) {}
             override fun onChildChanged(p0: DataSnapshot, p1: String?) {}
             override fun onChildRemoved(p0: DataSnapshot) {}
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 val message = dataSnapshot.getValue(Message::class.java)
-                message?.let{
-                    chatMessages.value = it
+                message?.let {
+                    firebaseObserver.messageChildAdded(it)
                 }
             }
+
             override fun onCancelled(databaseError: DatabaseError) {}
         }
         messagesListener?.let {
@@ -198,7 +190,7 @@ class FirebaseConnection {
         }
     }
 
-    fun removeMessagesListener(){
+    fun removeMessagesListener() {
         messagesListener?.let {
             dailyPath.child("messages").removeEventListener(it)
         }

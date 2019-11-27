@@ -12,7 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
-            tools:context="com.improve.latetrain.fragments.ChatFragment">
+            tools:context=".ui.fragments.ChatFragment">
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv"
@@ -38,7 +38,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent" />
 
-        <com.improve.latetrain.CustomEditTextKeyboardEvent
+        <com.improve.latetrain.ui.CustomEditTextKeyboardEvent
                 android:id="@+id/write_et"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

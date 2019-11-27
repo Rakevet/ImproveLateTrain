@@ -1,4 +1,4 @@
-package com.improve.latetrain
+package com.improve.latetrain.data.firebase
 
 import android.content.Context
 import com.bumptech.glide.Glide
