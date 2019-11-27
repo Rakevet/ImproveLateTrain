@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.QuerySnapshot
 import com.improve.latetrain.viewmodel.DrawerViewModel
 import com.improve.latetrain.R
+import com.improve.latetrain.data.Event
 import com.improve.latetrain.ui.activities.DrawerActivity
 import com.improve.latetrain.ui.adapters.GalleryAdapter
 import com.improve.latetrain.data.firebase.AnalyticsInfo
@@ -55,16 +56,18 @@ class PicturesGalleryFragment : Fragment() {
         val adapter = GalleryAdapter(imageReferences, drawerViewModel)
         gallery_rv_fpg.adapter = adapter
 
-        drawerViewModel.imagesUrls.observe(this, Observer<QuerySnapshot>{result ->
-            for(document in result){
-                imageReferences.add(
-                    ImageFirestore(
-                        document.id,
-                        document.data
+        drawerViewModel.imagesUrls.observe(this, Observer<Event<QuerySnapshot>>{ event ->
+            event.getContentIfNotHandled()?.let {result ->
+                for(document in result){
+                    imageReferences.add(
+                        ImageFirestore(
+                            document.id,
+                            document.data
+                        )
                     )
-                )
+                }
+                adapter.updateList(imageReferences)
             }
-            adapter.updateList(imageReferences)
         })
         drawerViewModel.getImagesUrls()
     }

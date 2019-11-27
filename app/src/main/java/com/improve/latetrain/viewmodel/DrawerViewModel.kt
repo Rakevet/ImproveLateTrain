@@ -21,7 +21,7 @@ class DrawerViewModel(private val repository: DrawerRepository, application: App
     val totalMinutes: LiveData<LiveTotalMinutes> by lazy { repository.totalMinutes }
     val minutesPerDay: LiveData<Event<Pair<Int, String>>> by lazy { repository.minutesPerDay }
     val chatMessages: LiveData<Event<Message>> by lazy { repository.chatMessages }
-    val imagesUrls: LiveData<QuerySnapshot> by lazy { repository.imagesUrls }
+    val imagesUrls: LiveData<Event<QuerySnapshot>> by lazy { repository.imagesUrls }
     val uploadImageComplete: LiveData<String> by lazy { repository.uploadImageComplete }
 
     fun adminUploadApprovedImage(map: HashMap<String, String>){

@@ -22,10 +22,10 @@ class DrawerRepository(private val liveTotalMinutesDao: LiveTotalMinutesDao) : I
     }
     private val _uploadMinutesComplete: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     private val _chatMessages: MutableLiveData<Event<Message>> by lazy { MutableLiveData<Event<Message>>() }
-    private val _imagesUrls: MutableLiveData<QuerySnapshot> by lazy { MutableLiveData<QuerySnapshot>() }
+    private val _imagesUrls: MutableLiveData<Event<QuerySnapshot>> by lazy { MutableLiveData<Event<QuerySnapshot>>() }
     private val _uploadImageComplete: MutableLiveData<String> by lazy { MutableLiveData<String>() }
     val uploadImageComplete: LiveData<String> get() = _uploadImageComplete
-    val imagesUrls: MutableLiveData<QuerySnapshot> get() = _imagesUrls
+    val imagesUrls: MutableLiveData<Event<QuerySnapshot>> get() = _imagesUrls
     val chatMessages: LiveData<Event<Message>> get() = _chatMessages
     val uploadMinutesComplete: LiveData<String> get() = _uploadMinutesComplete
     val minutesPerDay: LiveData<Event<Pair<Int, String>>> get() = _minutesPerDay
@@ -56,7 +56,7 @@ class DrawerRepository(private val liveTotalMinutesDao: LiveTotalMinutesDao) : I
     }
 
     override fun getImagesSuccess(result: QuerySnapshot) {
-        _imagesUrls.value = result
+        _imagesUrls.value = Event(result)
     }
 
     fun startListeningForMessages(){
