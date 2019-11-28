@@ -158,4 +158,5 @@
     <string name="send_minutes_waited">send_minutes_waited</string>
     <string name="profile_picture_content_description">Profile picture</string>
     <string name="tamp_day">TEMP_DAY</string>
+    <string name="uid">UID</string>
 </resources>
