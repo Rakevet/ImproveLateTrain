@@ -74,10 +74,6 @@ class ChatFragment : Fragment() {
                 })
             (context as DrawerActivity).bottom_nav_view?.visibility = View.GONE
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
         messagesObserver = Observer{event ->
             event.getContentIfNotHandled()?.let {message->
                 adapter.addMessage(message)
@@ -87,9 +83,9 @@ class ChatFragment : Fragment() {
         drawerViewModel.chatMessages.observe(this, messagesObserver)
         drawerViewModel.startListeningForMessages()
     }
-
-    override fun onStop() {
-        super.onStop()
+    
+    override fun onDestroyView() {
+        super.onDestroyView()
         drawerViewModel.stopListeningForMessages()
         drawerViewModel.chatMessages.removeObserver(messagesObserver)
     }

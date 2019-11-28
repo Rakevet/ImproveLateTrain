@@ -36,8 +36,8 @@ class HistoryFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_history, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
         date_btn_fh.setOnClickListener {
             context?.let {
@@ -47,19 +47,14 @@ class HistoryFragment : Fragment() {
                 AnalyticsInfo.sendAnalytics("chooseDateBtn", arrayListOf(Pair("", "")), it)
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
         val currentDay = SimpleDateFormat("dd", Locale.getDefault()).format(Date())
         setGraph(currentDay)
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onDestroyView() {
+        super.onDestroyView()
         drawerViewModel.stopListeningForDailyMinutes()
         drawerViewModel.minutesPerDay.removeObserver(minutesPerDayObserver)
-        graph_view_fh.removeAllSeries()
     }
 
     private fun setGraph(currentDay: String) {
